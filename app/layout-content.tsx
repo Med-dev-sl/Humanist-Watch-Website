@@ -10,9 +10,9 @@ export default function LayoutContent({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isAuthPage = pathname === "/login";
+  const hideLayout = pathname === "/login" || pathname.startsWith("/admin");
 
-  if (isAuthPage) {
+  if (hideLayout) {
     return <>{children}</>;
   }
 

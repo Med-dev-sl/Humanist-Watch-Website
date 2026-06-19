@@ -1,6 +1,37 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error || "Login failed");
+      setLoading(false);
+      return;
+    }
+
+    router.push("/admin");
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4">
       <div className="w-full max-w-sm animate-fade-in">
@@ -22,58 +53,45 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <form className="flex flex-col gap-5">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="email"
-                className="text-sm font-medium text-zinc-700"
-              >
+              <label htmlFor="email" className="text-sm font-medium text-zinc-700">
                 Email
               </label>
               <input
                 id="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 className="rounded-lg border border-zinc-300 px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium text-zinc-700"
-              >
+              <label htmlFor="password" className="text-sm font-medium text-zinc-700">
                 Password
               </label>
               <input
                 id="password"
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
                 className="rounded-lg border border-zinc-300 px-3 py-2.5 text-sm outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
 
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 text-zinc-600">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-zinc-300 text-primary focus:ring-primary"
-                />
-                Remember me
-              </label>
-              <a
-                href="#"
-                className="text-primary transition-colors hover:text-primary-light"
-              >
-                Forgot password?
-              </a>
-            </div>
+            {error && (
+              <p className="text-sm text-red-500">{error}</p>
+            )}
 
             <button
               type="submit"
-              className="rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              disabled={loading}
+              className="rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-60"
             >
-              Sign In
+              {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
         </div>

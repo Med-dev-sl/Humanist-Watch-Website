@@ -1,11 +1,13 @@
 import { PrismaClient } from "../app/generated/prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
+import bcrypt from "bcryptjs";
 
 const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
   const email = "superadmin@huwasal.com";
+  const password = "admin123";
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
@@ -13,16 +15,20 @@ async function main() {
     return;
   }
 
+  const hashed = await bcrypt.hash(password, 12);
+
   await prisma.user.create({
     data: {
       name: "Superadmin",
       email,
-      password: "admin123",
+      password: hashed,
       role: "SUPERADMIN",
     },
   });
 
-  console.log("Superadmin user created successfully.");
+  console.log("Superadmin created:");
+  console.log("  Email:    superadmin@huwasal.com");
+  console.log("  Password: admin123");
 }
 
 main()

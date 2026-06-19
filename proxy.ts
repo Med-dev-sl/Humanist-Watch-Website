@@ -1,7 +1,25 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifyToken } from "@/lib/auth";
 
 export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const response = NextResponse.next();
+
+  if (pathname.startsWith("/admin")) {
+    const token = request.cookies.get("token")?.value;
+
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+
+    try {
+      verifyToken(token);
+    } catch {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+
   const cspHeader = [
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline'",
@@ -14,9 +32,6 @@ export function proxy(request: NextRequest) {
     "frame-ancestors 'none'",
     "upgrade-insecure-requests",
   ].join("; ");
-
-  const requestHeaders = new Headers(request.headers);
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
 
   response.headers.set("Content-Security-Policy", cspHeader);
 
