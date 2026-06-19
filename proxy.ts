@@ -22,10 +22,11 @@ export function proxy(request: NextRequest) {
 
   const cspHeader = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://vercel.live",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data: https://*.blob.vercel-storage.com",
     "font-src 'self'",
+    "connect-src 'self' https://vercel.live",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
