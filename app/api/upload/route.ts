@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "node:fs/promises";
-import { randomUUID } from "node:crypto";
-import { uploadImage } from "@/lib/upload";
+import { put } from "@vercel/blob";
 
 export async function POST(request: Request) {
   try {
@@ -13,24 +11,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const url = await uploadImage(file, folder);
-      return NextResponse.json({ url });
-    }
-
     const ext = file.name.split(".").pop() || "jpg";
-    const fileName = `${randomUUID()}.${ext}`;
-    const dir = `public/uploads/${folder}`;
-    const filePath = `${dir}/${fileName}`;
+    const key = `${folder}/${crypto.randomUUID()}.${ext}`;
 
-    await mkdir(dir, { recursive: true });
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(filePath, buffer);
+    const blob = await put(key, file, {
+      access: "public",
+      addRandomSuffix: false,
+    });
 
-    const url = `/uploads/${folder}/${fileName}`;
-    return NextResponse.json({ url });
+    return NextResponse.json({ url: blob.url });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Upload failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: message, detail: String(error) }, { status: 500 });
   }
 }
