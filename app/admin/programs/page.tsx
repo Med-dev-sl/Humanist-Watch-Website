@@ -59,6 +59,9 @@ export default function AdminPrograms() {
   const [form, setForm] = useState<FormData>(emptyForm);
   const [formErrors, setFormErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [saving, setSaving] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const [deleteTarget, setDeleteTarget] = useState<Program | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -96,9 +99,13 @@ export default function AdminPrograms() {
         icon: editing.icon ?? "",
         published: editing.published,
       });
+      setImagePreview(editing.image);
+      setImageFile(null);
       setFormErrors({});
     } else if (formOpen && !editing) {
       setForm(emptyForm);
+      setImagePreview(null);
+      setImageFile(null);
       setFormErrors({});
     }
   }, [formOpen, editing]);
@@ -128,9 +135,23 @@ export default function AdminPrograms() {
     if (!validate()) return;
     setSaving(true);
     try {
+      let image = form.image;
+      if (imageFile) {
+        setUploading(true);
+        const uploadData = new FormData();
+        uploadData.append("file", imageFile);
+        uploadData.append("folder", "programs");
+        const uploadRes = await fetch("/api/upload", { method: "POST", body: uploadData });
+        const uploadResult = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(uploadResult.error ?? "Upload failed");
+        image = uploadResult.url;
+        setUploading(false);
+      }
+
+      const payload = { ...form, image };
       const url = editing ? `/api/admin/programs/${editing.id}` : "/api/admin/programs";
       const method = editing ? "PUT" : "POST";
-      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Request failed");
       setFormOpen(false);
@@ -142,6 +163,7 @@ export default function AdminPrograms() {
       showToast("error", "Error", msg);
     } finally {
       setSaving(false);
+      setUploading(false);
     }
   }
 
@@ -426,14 +448,52 @@ export default function AdminPrograms() {
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">
-                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-zinc-500">Image URL</label>
-                  <input
-                    type="text"
-                    value={form.image}
-                    onChange={(e) => setForm({ ...form, image: e.target.value })}
-                    placeholder="https://..."
-                    className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-primary outline-none transition-all duration-300 placeholder-zinc-300 focus:border-primary/40 focus:shadow-lg focus:shadow-primary/5"
-                  />
+                  <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-zinc-500">Image</label>
+                  <label
+                    className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 transition-all duration-300 ${
+                      imagePreview
+                        ? "border-primary/20 bg-primary/[0.02]"
+                        : "border-zinc-200 bg-zinc-50 hover:border-primary/30 hover:bg-primary/[0.02]"
+                    }`}
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="sr-only"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setImageFile(file);
+                          setForm({ ...form, image: "" });
+                          const reader = new FileReader();
+                          reader.onload = (ev) => setImagePreview(ev.target?.result as string);
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                    {imagePreview ? (
+                      <div className="relative w-full">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="mx-auto max-h-40 rounded-lg object-contain"
+                        />
+                        <span className="mt-2 block text-center text-xs text-zinc-400 group-hover:text-primary transition-colors">
+                          Click to change image
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-2">
+                        <svg className="h-8 w-8 text-zinc-300 group-hover:text-primary/40 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+                        </svg>
+                        <span className="text-sm font-medium text-zinc-400 group-hover:text-primary transition-colors">
+                          Upload image
+                        </span>
+                        <span className="text-xs text-zinc-300">PNG, JPG, WebP up to 10MB</span>
+                      </div>
+                    )}
+                  </label>
                 </div>
 
                 <div className="col-span-2 sm:col-span-1">
@@ -475,16 +535,16 @@ export default function AdminPrograms() {
               </button>
               <button
                 onClick={handleSave}
-                disabled={saving}
+                disabled={saving || uploading}
                 className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-primary to-primary-dark px-6 py-2.5 text-sm font-medium text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/25 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {saving ? (
+                {saving || uploading ? (
                   <span className="flex items-center gap-2">
                     <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
                     </svg>
-                    Saving...
+                    {uploading ? "Uploading..." : "Saving..."}
                   </span>
                 ) : (
                   <span className="relative z-10">{editing ? "Update Program" : "Create Program"}</span>
