@@ -3,19 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Icon from "@/app/components/mui-icon";
 
 const sidebarLinks = [
-  { href: "/admin", label: "Dashboard", icon: "▦" },
-  { href: "/admin/users", label: "Users", icon: "👥" },
-  { href: "/admin/programs", label: "Programs & Projects", icon: "📋" },
-  { href: "/admin/blog", label: "Blog Posts", icon: "📝" },
-  { href: "/admin/gallery", label: "Gallery", icon: "🖼️" },
-  { href: "/admin/beneficiaries", label: "Beneficiaries", icon: "🤝" },
-  { href: "/admin/team", label: "Team Members", icon: "👤" },
-  { href: "/admin/jobs", label: "Jobs", icon: "💼" },
-  { href: "/admin/contacts", label: "Contact Messages", icon: "✉️" },
-  { href: "/admin/volunteers", label: "Volunteers", icon: "🙋" },
-  { href: "/admin/donations", label: "Donations", icon: "💰" },
+  { href: "/admin", label: "Dashboard", icon: "dashboard" },
+  { href: "/admin/users", label: "Users", icon: "group" },
+  { href: "/admin/programs", label: "Programs & Projects", icon: "assignment" },
+  { href: "/admin/blog", label: "Blog Posts", icon: "article" },
+  { href: "/admin/gallery", label: "Gallery", icon: "photo_library" },
+  { href: "/admin/beneficiaries", label: "Beneficiaries", icon: "volunteer_activism" },
+  { href: "/admin/team", label: "Team Members", icon: "badge" },
+  { href: "/admin/jobs", label: "Jobs", icon: "work" },
+  { href: "/admin/contacts", label: "Contact Messages", icon: "mail" },
+  { href: "/admin/volunteers", label: "Volunteers", icon: "handshake" },
+  { href: "/admin/donations", label: "Donations", icon: "payments" },
 ];
 
 export default function AdminSidebar({ userName }: { userName: string }) {
@@ -56,7 +57,7 @@ export default function AdminSidebar({ userName }: { userName: string }) {
               {isActive && (
                 <span className="absolute inset-0 animate-pulse-glow rounded-xl" />
               )}
-              <span className="relative z-10">{link.icon}</span>
+              <Icon name={link.icon} className="relative z-10 text-xl" />
               <span className="relative z-10">{link.label}</span>
               {isActive && (
                 <span className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-white/60" />

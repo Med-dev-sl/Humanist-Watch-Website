@@ -1,12 +1,12 @@
-import PageHeader from "@/app/admin/page-header";
+import Icon from "@/app/components/mui-icon";
 
 const stats = [
-  { label: "Total Users", value: "0", icon: "👥", color: "from-blue-500 to-blue-600" },
-  { label: "Programs", value: "0", icon: "📋", color: "from-emerald-500 to-emerald-600" },
-  { label: "Blog Posts", value: "0", icon: "📝", color: "from-amber-500 to-amber-600" },
-  { label: "Donations", value: "0", icon: "💰", color: "from-violet-500 to-violet-600" },
-  { label: "Team Members", value: "0", icon: "👤", color: "from-rose-500 to-rose-600" },
-  { label: "Volunteers", value: "0", icon: "🙋", color: "from-cyan-500 to-cyan-600" },
+  { label: "Total Users", value: "0", icon: "group", color: "from-blue-500 to-blue-600" },
+  { label: "Programs", value: "0", icon: "assignment", color: "from-emerald-500 to-emerald-600" },
+  { label: "Blog Posts", value: "0", icon: "article", color: "from-amber-500 to-amber-600" },
+  { label: "Donations", value: "0", icon: "payments", color: "from-violet-500 to-violet-600" },
+  { label: "Team Members", value: "0", icon: "badge", color: "from-rose-500 to-rose-600" },
+  { label: "Volunteers", value: "0", icon: "handshake", color: "from-cyan-500 to-cyan-600" },
 ];
 
 export default function AdminDashboard() {
@@ -32,9 +32,9 @@ export default function AdminDashboard() {
                 <p className="mt-2 font-heading text-4xl font-bold text-primary">{stat.value}</p>
               </div>
               <div
-                className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${stat.color} text-xl shadow-lg transition-transform duration-300 group-hover:scale-110`}
+                className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${stat.color} text-white shadow-lg transition-transform duration-300 group-hover:scale-110`}
               >
-                {stat.icon}
+                <Icon name={stat.icon} className="text-2xl" />
               </div>
             </div>
             <div className="mt-4 h-1.5 w-full rounded-full bg-zinc-100">
