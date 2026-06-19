@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-full items-center justify-center bg-zinc-50 px-4 py-20">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4">
       <div className="w-full max-w-sm animate-fade-in">
         <div className="rounded-xl border bg-white p-8 shadow-sm">
           <div className="mb-8 flex flex-col items-center gap-4">
