@@ -37,7 +37,7 @@ export default function AdminDonations() {
       setLoading(true);
       const res = await fetch(`/api/admin/donations`);
       const data = await res.json();
-      setDonations(data.donations ?? []);
+      setDonations(Array.isArray(data) ? data : data.donations ?? []);
     } catch {
       showToast("error", "Error", "Failed to load donations");
     } finally {

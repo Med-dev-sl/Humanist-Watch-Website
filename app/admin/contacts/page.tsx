@@ -36,7 +36,7 @@ export default function AdminContacts() {
       if (search) params.set("q", search);
       const res = await fetch(`/api/admin/contacts?${params}`);
       const data = await res.json();
-      setContacts(data.contacts ?? []);
+      setContacts(Array.isArray(data) ? data : data.contacts ?? []);
     } catch {
       showToast("error", "Error", "Failed to load contacts");
     } finally {

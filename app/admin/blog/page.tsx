@@ -87,7 +87,7 @@ export default function AdminBlog() {
       if (search) params.set("q", search);
       const res = await fetch(`/api/admin/blog?${params}`);
       const data = await res.json();
-      setPosts(data.posts ?? []);
+      setPosts(Array.isArray(data) ? data : data.posts ?? []);
     } catch {
       showToast("error", "Error", "Failed to load blog posts");
     } finally {

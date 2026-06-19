@@ -47,7 +47,7 @@ export default function AdminVolunteers() {
       if (search) params.set("q", search);
       const res = await fetch(`/api/admin/volunteers?${params}`);
       const data = await res.json();
-      setVolunteers(data.volunteers ?? []);
+      setVolunteers(Array.isArray(data) ? data : data.volunteers ?? []);
     } catch {
       showToast("error", "Error", "Failed to load volunteers");
     } finally {

@@ -69,7 +69,7 @@ export default function AdminGallery() {
       if (search) params.set("q", search);
       const res = await fetch(`/api/admin/gallery?${params}`);
       const data = await res.json();
-      setItems(data.items ?? []);
+      setItems(Array.isArray(data) ? data : data.items ?? []);
     } catch {
       showToast("error", "Error", "Failed to load gallery items");
     } finally {

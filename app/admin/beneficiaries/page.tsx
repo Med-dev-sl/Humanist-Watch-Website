@@ -78,7 +78,7 @@ export default function AdminBeneficiaries() {
       if (search) params.set("q", search);
       const res = await fetch(`/api/admin/beneficiaries?${params}`);
       const data = await res.json();
-      setBeneficiaries(data.beneficiaries ?? []);
+      setBeneficiaries(Array.isArray(data) ? data : data.beneficiaries ?? []);
     } catch {
       showToast("error", "Error", "Failed to load beneficiaries");
     } finally {

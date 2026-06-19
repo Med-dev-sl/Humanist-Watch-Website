@@ -69,7 +69,7 @@ export default function AdminUsers() {
       if (search) params.set("q", search);
       const res = await fetch(`/api/admin/users?${params}`);
       const data = await res.json();
-      setUsers(data.users ?? []);
+      setUsers(Array.isArray(data) ? data : data.users ?? []);
     } catch {
       showToast("error", "Error", "Failed to load users");
     } finally {
