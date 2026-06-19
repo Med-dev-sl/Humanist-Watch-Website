@@ -23,9 +23,9 @@ export function proxy(request: NextRequest) {
   const cspHeader = [
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://vercel.live",
-    "style-src 'self' 'unsafe-inline'",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' blob: data: https://*.blob.vercel-storage.com",
-    "font-src 'self'",
+    "font-src 'self' https://fonts.gstatic.com",
     "connect-src 'self' https://vercel.live",
     "object-src 'none'",
     "base-uri 'self'",

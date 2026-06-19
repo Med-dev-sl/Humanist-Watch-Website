@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { writeFile, mkdir } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 import { uploadImage } from "@/lib/upload";
 
 export async function POST(request: Request) {
@@ -11,7 +13,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    const url = await uploadImage(file, folder);
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const url = await uploadImage(file, folder);
+      return NextResponse.json({ url });
+    }
+
+    const ext = file.name.split(".").pop() || "jpg";
+    const fileName = `${randomUUID()}.${ext}`;
+    const dir = `public/uploads/${folder}`;
+    const filePath = `${dir}/${fileName}`;
+
+    await mkdir(dir, { recursive: true });
+    const buffer = Buffer.from(await file.arrayBuffer());
+    await writeFile(filePath, buffer);
+
+    const url = `/uploads/${folder}/${fileName}`;
     return NextResponse.json({ url });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Upload failed";
