@@ -8,9 +8,9 @@ datasource db {
 }
 
 enum UserRole {
+  SUPERADMIN
+  WEBSITE_ADMINISTRATOR
   ADMIN
-  EDITOR
-  VOLUNTEER
 }
 
 enum PostStatus {
@@ -32,7 +32,7 @@ model User {
   name      String
   email     String   @unique
   password  String
-  role      UserRole @default(VOLUNTEER)
+  role      UserRole @default(ADMIN)
   image     String?
   bio       String?
   createdAt DateTime @default(now())
