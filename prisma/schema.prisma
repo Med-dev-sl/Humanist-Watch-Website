@@ -95,6 +95,34 @@ model Program {
   user   User @relation(fields: [userId], references: [id])
 }
 
+model Beneficiary {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  story       String?
+  description String?
+  image       String?
+  location    String?
+  age         Int?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Job {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  content     String?
+  location    String?
+  type        String   @default("full-time")
+  deadline    DateTime?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model BlogPost {
   id        String     @id @default(cuid())
   title     String
