@@ -12,6 +12,7 @@ const sidebarLinks = [
   { href: "/admin/blog", label: "Blog Posts", icon: "article" },
   { href: "/admin/gallery", label: "Gallery", icon: "photo_library" },
   { href: "/admin/beneficiaries", label: "Beneficiaries", icon: "volunteer_activism" },
+  { href: "/admin/events", label: "Events", icon: "event" },
   { href: "/admin/team", label: "Team Members", icon: "badge" },
   { href: "/admin/jobs", label: "Jobs", icon: "work" },
   { href: "/admin/contacts", label: "Contact Messages", icon: "mail" },
