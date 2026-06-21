@@ -60,8 +60,18 @@ model Organization {
   instagram   String?
   linkedin    String?
   youtube     String?
+
   mission     String?
+  missionImage String?
   vision      String?
+  visionImage String?
+  aboutUs     String?
+  aboutImage  String?
+  whoWeAre    String?
+  whoWeAreImage String?
+  history     String?
+  historyImage String?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

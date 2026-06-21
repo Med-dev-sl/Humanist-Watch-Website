@@ -18,6 +18,7 @@ const sidebarLinks = [
   { href: "/admin/jobs", label: "Jobs", icon: "work" },
   { href: "/admin/contacts", label: "Contact Messages", icon: "mail" },
   { href: "/admin/volunteers", label: "Volunteers", icon: "handshake" },
+  { href: "/admin/settings", label: "Site Settings", icon: "settings" },
   { href: "/admin/donations", label: "Donations", icon: "payments" },
 ];
 
