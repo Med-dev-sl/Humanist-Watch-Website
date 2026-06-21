@@ -26,7 +26,7 @@ export default function Header() {
   return (
     <div className="sticky top-0 z-50">
       {/* Top bar */}
-      <div className="hidden bg-primary md:block">
+      <div className="hidden animate-slide-down md:block">
         <div className="mx-auto flex h-9 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-4 text-xs text-white/80">
             <a href="mailto:info@huwasal.com" className="flex items-center gap-1.5 transition-colors hover:text-white">
@@ -55,9 +55,10 @@ export default function Header() {
 
       {/* Main header */}
       <header
-        className={`w-full transition-all duration-500 ${
+        className={`w-full animate-fade-in transition-all duration-500 ${
           scrolled ? "bg-white shadow-lg" : "bg-white"
         }`}
+        style={{ animationDelay: "0.2s", animationFillMode: "both" }}
       >
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="group flex items-center gap-3">
