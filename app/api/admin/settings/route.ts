@@ -53,6 +53,8 @@ export async function PUT(request: Request) {
       aboutImage: body.aboutImage ?? null,
       whoWeAre: body.whoWeAre ?? null,
       whoWeAreImage: body.whoWeAreImage ?? null,
+      whatWeDo: body.whatWeDo ?? null,
+      whatWeDoImage: body.whatWeDoImage ?? null,
       history: body.history ?? null,
       historyImage: body.historyImage ?? null,
     },

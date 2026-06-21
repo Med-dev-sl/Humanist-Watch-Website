@@ -69,6 +69,8 @@ model Organization {
   aboutImage  String?
   whoWeAre    String?
   whoWeAreImage String?
+  whatWeDo    String?
+  whatWeDoImage String?
   history     String?
   historyImage String?
 

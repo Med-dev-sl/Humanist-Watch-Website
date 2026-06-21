@@ -30,11 +30,13 @@ type OrgData = {
   aboutImage: string | null;
   whoWeAre: string | null;
   whoWeAreImage: string | null;
+  whatWeDo: string | null;
+  whatWeDoImage: string | null;
   history: string | null;
   historyImage: string | null;
 };
 
-const tabs = ["General", "About", "Who We Are", "History", "Mission & Vision"];
+const tabs = ["General", "About", "Who We Are", "What We Do", "History", "Mission & Vision"];
 
 export default function AdminSettings() {
   const { showToast } = useToast();
@@ -156,7 +158,7 @@ export default function AdminSettings() {
 
   return (
     <div className="p-8">
-      <PageHeader title="Site Settings" description="Manage organization content — About, Who We Are, History, Mission & Vision." />
+      <PageHeader title="Site Settings" description="Manage organization content — About, Who We Are, What We Do, History, Mission & Vision." />
 
       {/* Tabs */}
       <div className="mb-6 flex gap-1 rounded-xl border border-zinc-200 bg-white p-1.5 overflow-x-auto">
@@ -254,8 +256,22 @@ export default function AdminSettings() {
           </div>
         )}
 
-        {/* History */}
+        {/* What We Do */}
         {activeTab === 3 && (
+          <div className="space-y-5 p-6">
+            <div className="grid grid-cols-2 gap-5">
+              <div className="col-span-2">
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-zinc-500">What We Do Content</label>
+                <textarea rows={12} value={org.whatWeDo ?? ""} onChange={(e) => update("whatWeDo", e.target.value)}
+                  className="w-full resize-none rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-primary outline-none transition-all duration-300 focus:border-primary/40 focus:shadow-lg focus:shadow-primary/5" />
+              </div>
+              <ImageField field="whatWeDoImage" label="Photo" />
+            </div>
+          </div>
+        )}
+
+        {/* History */}
+        {activeTab === 4 && (
           <div className="space-y-5 p-6">
             <div className="grid grid-cols-2 gap-5">
               <div className="col-span-2">
@@ -269,7 +285,7 @@ export default function AdminSettings() {
         )}
 
         {/* Mission & Vision */}
-        {activeTab === 4 && (
+        {activeTab === 5 && (
           <div className="space-y-5 p-6">
             <div className="grid grid-cols-2 gap-5">
               <div className="col-span-2 sm:col-span-1">
