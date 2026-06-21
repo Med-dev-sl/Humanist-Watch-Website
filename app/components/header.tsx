@@ -65,9 +65,9 @@ export default function Header() {
             <Image
               src="/Huwasal%20Logo.png"
               alt="Humanist Watch Salone"
-              width={48}
-              height={48}
-              className="h-12 w-12 object-contain transition-transform duration-300 group-hover:scale-110"
+              width={64}
+              height={64}
+              className="h-16 w-16 object-contain transition-transform duration-300 group-hover:scale-110"
             />
             <span className="hidden text-lg font-bold tracking-tight text-primary sm:inline">
               Humanist Watch Salone
