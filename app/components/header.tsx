@@ -26,7 +26,7 @@ export default function Header() {
   return (
     <div className="sticky top-0 z-50">
       {/* Top bar */}
-      <div className="block animate-slide-down">
+      <div className="block animate-slide-down bg-primary">
         <div className="mx-auto flex h-9 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-4 text-xs text-white/80">
             <a href="mailto:info@huwasal.com" className="flex items-center gap-1.5 transition-colors hover:text-white">
