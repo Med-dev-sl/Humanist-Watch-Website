@@ -100,7 +100,94 @@ async function main() {
   console.log("Done. Edit content anytime via Admin > Site Settings.");
 }
 
+async function seedPrograms() {
+  const admin = await prisma.user.findFirst({ where: { role: "SUPERADMIN" } });
+  if (!admin) {
+    console.log("No admin user found. Skipping programs seed.");
+    return;
+  }
+
+  const existingCount = await prisma.program.count();
+  if (existingCount > 0) {
+    console.log("Programs already exist. Re-seeding with latest content...");
+    await prisma.program.deleteMany({});
+  }
+
+  const programs = [
+    {
+      title: "Protection and Empowerment of Vulnerable Populations",
+      slug: "protection-and-empowerment",
+      description: "Protection and empowerment of vulnerable populations including women and girls against human rights abuse and exploitation.",
+      content: `Protection and empowerment of vulnerable populations including women and girls against human rights abuse and exploitation.
+
+We provide psycho-social support to victims of human rights abuse including SGBV to access justice as well as community educative platform on gender transformational and community legal empowerment for the less privileged voices to reach and stimulate relevant stakeholders in response to their interests and concerns thus creating violence free environment for all.`,
+      published: true,
+      icon: "shield",
+    },
+    {
+      title: "Enhancing Economic Security for Women, Youth and Other Vulnerable Groups",
+      slug: "enhancing-economic-security",
+      description: "We provide better livelihood opportunities for the less privileged population including women, young people and persons with different abilities.",
+      content: `Enhancing economic security for women, youth and other vulnerable groups.
+
+We provide better livelihood opportunities for the less privileged population including women, young people and persons with different abilities through livelihood skills development, income generating activities and employability empowerment.`,
+      published: true,
+      icon: "currency",
+    },
+    {
+      title: "Supporting Communities for Social Cohesion",
+      slug: "social-cohesion",
+      description: "We work towards building support for communities to interact with free mind as citizens, manage emerging conflict, and shift discriminatory cultural norms.",
+      content: `Supporting communities for social cohesion through reconciliation dialogue, social accountability and gender-aware development.
+
+We work towards building support for communities to interact with free mind as citizens, manage emerging conflict, shift discriminatory cultural norms, considered and benefit equally from development with opportunity to assess social service delivery will greatly contribute towards promoting peace, social cohesion and national unity. As such, we facilitate community knowledge building campaigns on peace building, inclusive governance and development including women's protection and empowerment through outreach sessions, trainings, media engagements and IEC/BCC materials production and distribution. These contributes to building synergies of community structures to become peace and development ambassadors in communities.`,
+      published: true,
+      icon: "handshake",
+    },
+    {
+      title: "Improvement on Social Accountability and Citizens Trust",
+      slug: "social-accountability",
+      description: "Monitor access to services for citizens and bring a dream for healthy communities and progressive development outcomes.",
+      content: `Improvement on social accountability and citizens trust in social service delivery.
+
+Monitor (through physical visits, surveys, desk reviews and other applicable means) access to services for citizens, containing education, health care, clean water supply, food security, justice and security and other services that addresses challenges of citizens wellbeing.
+
+Bringing a dream for healthy communities and progressive development outcomes.
+
+We Educate and mobilize communities on maintaining of basic health practices, promote WASH activities in rural communities and learning institutions, sustainable use of the environment to mitigate climate change and right to food by strengthening climate – smart agricultural activities that include climate and care initiatives. We also, embark on advocacy for accessible, available and affordable health care delivery for communities and responsible governance of natural resources and investment within human rights standard.`,
+      published: true,
+      icon: "chart",
+    },
+    {
+      title: "Child Protection and Child Personal Development",
+      slug: "child-protection",
+      description: "Community awareness raising on issues that undermine child personal development such as child sexual exploitation and abuse, child labor, child trafficking, early marriages and teenage pregnancy.",
+      content: `Child protection and child personal development.
+
+We work towards:
+Community awareness raising on issues that undermine child personal development such as child sexual exploitation and abuse, child labor, child trafficking, early marriages and teenage pregnancy;
+Monitoring and documentation of issues related to children in contact with the law as well as provide legal aid services and develop functional case management system;
+Provision of social services to enhance transformation of street child;
+Provision of educational support for vulnerable children including orphans and disabled children and advocacy for the creation of model child friendly learning environment.`,
+      published: true,
+      icon: "child",
+    },
+  ];
+
+  for (const prog of programs) {
+    await prisma.program.create({
+      data: {
+        ...prog,
+        userId: admin.id,
+      },
+    });
+  }
+
+  console.log(`Seeded ${programs.length} programs.`);
+}
+
 main()
+  .then(() => seedPrograms())
   .catch((e) => {
     console.error(e);
     process.exit(1);
