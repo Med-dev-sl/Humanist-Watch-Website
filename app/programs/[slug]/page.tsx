@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { use } from "react";
+import SlideIn from "@/app/components/slide-in";
 
 type Program = {
   id: string;
@@ -157,27 +158,31 @@ export default function ProgramDetail({ params }: { params: Promise<{ slug: stri
 
       {/* Content */}
       <section className="py-16 sm:py-20">
-        <DetailContent program={program} />
+        <SlideIn>
+          <DetailContent program={program} />
+        </SlideIn>
       </section>
 
       {/* CTA */}
-      <section className="bg-primary py-16 text-center">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6">
-          <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">Support Our Work</h2>
-          <p className="mb-8 text-base text-white/70 sm:text-lg">
-            Your support helps us continue these programs and reach more communities in need.
-          </p>
-          <Link
-            href="/donate"
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-primary shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:shadow-2xl"
-          >
-            <span>Donate Now</span>
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
-        </div>
-      </section>
+      <SlideIn direction="up">
+        <section className="bg-primary py-16 text-center">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6">
+            <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">Support Our Work</h2>
+            <p className="mb-8 text-base text-white/70 sm:text-lg">
+              Your support helps us continue these programs and reach more communities in need.
+            </p>
+            <Link
+              href="/donate"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-3.5 text-sm font-bold text-primary shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:shadow-2xl"
+            >
+              <span>Donate Now</span>
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </section>
+      </SlideIn>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import LoadingSpinner from "@/app/components/loading-spinner";
+import SlideIn from "@/app/components/slide-in";
 
 type Section = {
   id: string;
@@ -163,7 +164,8 @@ export default function AboutContent() {
 
       {/* Who We Are */}
       {whoBlocks.length > 0 && (
-        <section className="relative overflow-hidden py-20 sm:py-28">
+        <SlideIn>
+          <section className="relative overflow-hidden py-20 sm:py-28">
           <div className="pointer-events-none absolute -left-40 top-1/3 h-80 w-80 rounded-full bg-primary/[0.02] blur-3xl" />
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
@@ -220,11 +222,13 @@ export default function AboutContent() {
             </div>
           </div>
         </section>
+      </SlideIn>
       )}
 
       {/* Mission & Vision */}
       {(missionBlocks.length > 0 || visionBlocks.length > 0) && (
-        <section className="relative overflow-hidden bg-gradient-to-br from-primary/[0.02] via-white to-primary/[0.02] py-20 sm:py-28">
+        <SlideIn direction="left">
+          <section className="relative overflow-hidden bg-gradient-to-br from-primary/[0.02] via-white to-primary/[0.02] py-20 sm:py-28">
           <div className="pointer-events-none absolute -right-40 -top-40 h-80 w-80 rounded-full bg-primary/[0.03] blur-3xl" />
           <div className="pointer-events-none absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/[0.02] blur-3xl" />
 
@@ -299,11 +303,13 @@ export default function AboutContent() {
             </div>
           </div>
         </section>
+      </SlideIn>
       )}
 
       {/* History */}
       {historyBlocks.length > 0 && (
-        <section className="relative overflow-hidden py-20 sm:py-28">
+        <SlideIn direction="right">
+          <section className="relative overflow-hidden py-20 sm:py-28">
           <div className="pointer-events-none absolute -top-40 left-1/3 h-80 w-80 rounded-full bg-primary/[0.02] blur-3xl" />
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
@@ -360,11 +366,13 @@ export default function AboutContent() {
             </div>
           </div>
         </section>
+      </SlideIn>
       )}
 
       {/* What We Do */}
       {whatBlocks.length > 0 && (
-        <section className="relative overflow-hidden bg-gradient-to-br from-primary/[0.02] via-white to-primary/[0.02] py-20 sm:py-28">
+        <SlideIn>
+          <section className="relative overflow-hidden bg-gradient-to-br from-primary/[0.02] via-white to-primary/[0.02] py-20 sm:py-28">
           <div className="pointer-events-none absolute -left-40 -top-40 h-80 w-80 rounded-full bg-primary/[0.03] blur-3xl" />
           <div className="pointer-events-none absolute -bottom-40 -right-40 h-80 w-80 rounded-full bg-primary/[0.02] blur-3xl" />
 
@@ -412,10 +420,12 @@ export default function AboutContent() {
             </div>
           </div>
         </section>
+      </SlideIn>
       )}
 
       {/* CTA */}
-      <section className="relative overflow-hidden bg-primary py-16 sm:py-20">
+      <SlideIn>
+        <section className="relative overflow-hidden bg-primary py-16 sm:py-20">
         <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/[0.03] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80 rounded-full bg-white/[0.05] blur-3xl" />
 
@@ -443,6 +453,7 @@ export default function AboutContent() {
           </div>
         </div>
       </section>
+      </SlideIn>
     </div>
   );
 }
