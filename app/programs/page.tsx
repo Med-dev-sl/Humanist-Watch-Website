@@ -84,7 +84,7 @@ export default function ProgramsPage() {
 
       {/* Programs Grid */}
       <SlideIn>
-        <section className="py-20 sm:py-28">
+        <section className="relative overflow-hidden py-20 sm:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
             {loading ? (
               <div className="flex items-center justify-center py-20">
@@ -95,12 +95,12 @@ export default function ProgramsPage() {
                 <p className="text-zinc-400">No programs published yet.</p>
               </div>
             ) : (
-              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {programs.map((program, i) => (
                   <Link
                     key={program.id}
                     href={`/programs/${program.slug}`}
-                    className="group relative overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1"
+                    className="group relative w-full overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1"
                     style={{ animation: `slide-up 0.5s ease-out ${i * 0.08}s both` }}
                   >
                     <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/[0.03] transition-all duration-500 group-hover:scale-[3]" />
