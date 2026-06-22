@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import SlideIn from "@/app/components/slide-in";
 
 type Program = {
   id: string;
@@ -82,6 +83,7 @@ export default function ProgramsPage() {
       </section>
 
       {/* Programs Grid */}
+<<<<<<< HEAD
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           {loading ? (
@@ -95,25 +97,70 @@ export default function ProgramsPage() {
           ) : (
             <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {programs.map((program, i) => (
+=======
+      <SlideIn>
+        <section className="relative overflow-hidden py-20 sm:py-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            {loading ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+              </div>
+            ) : programs.length === 0 ? (
+              <div className="py-20 text-center">
+                <p className="text-zinc-400">No programs published yet.</p>
+              </div>
+            ) : (
+              <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {programs.map((program, i) => (
+>>>>>>> 94632a1f1122b719784615d783b7333ebfbb084f
                   <Link
                     key={program.id}
                     href={`/programs/${program.slug}`}
                     className="group relative w-full overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1"
+<<<<<<< HEAD
                   style={{ animation: `slide-up 0.5s ease-out ${i * 0.08}s both` }}
                 >
                   <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/[0.03] transition-all duration-500 group-hover:scale-[3]" />
+=======
+                    style={{ animation: `slide-up 0.5s ease-out ${i * 0.08}s both` }}
+                  >
+                    <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/[0.03] transition-all duration-500 group-hover:scale-[3]" />
+>>>>>>> 94632a1f1122b719784615d783b7333ebfbb084f
 
-                  {program.image && (
-                    <div className="relative h-48 w-full overflow-hidden">
-                      <Image
-                        src={program.image}
-                        alt={program.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent" />
+                    {program.image && (
+                      <div className="relative h-48 w-full overflow-hidden">
+                        <Image
+                          src={program.image}
+                          alt={program.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent" />
+                      </div>
+                    )}
+
+                    <div className="p-5 sm:p-8">
+                      <div className="mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white mx-auto sm:mx-0">
+                        {getIcon(program.icon)}
+                      </div>
+
+                      <h2 className="mb-3 text-lg sm:text-xl font-bold text-primary transition-colors duration-300 group-hover:text-primary-dark text-center sm:text-left">
+                        {program.title}
+                      </h2>
+
+                      <p className="mb-4 text-sm leading-relaxed text-zinc-500 line-clamp-4 text-center sm:text-left">
+                        {program.description}
+                      </p>
+
+                      <div className="flex items-center gap-1 text-sm font-semibold text-primary justify-center sm:justify-start">
+                        <span>Read More</span>
+                        <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
                     </div>
+<<<<<<< HEAD
                   )}
 
                   <div className="p-5 sm:p-8">
@@ -142,6 +189,15 @@ export default function ProgramsPage() {
           )}
         </div>
       </section>
+=======
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </SlideIn>
+>>>>>>> 94632a1f1122b719784615d783b7333ebfbb084f
     </div>
   );
 }
