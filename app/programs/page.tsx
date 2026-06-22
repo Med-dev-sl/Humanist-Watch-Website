@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -97,28 +98,43 @@ export default function ProgramsPage() {
                 <Link
                   key={program.id}
                   href={`/programs/${program.slug}`}
-                  className="group relative overflow-hidden rounded-2xl border border-primary/10 bg-white p-8 shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1"
+                  className="group relative overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1"
                   style={{ animation: `slide-up 0.5s ease-out ${i * 0.08}s both` }}
                 >
                   <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/[0.03] transition-all duration-500 group-hover:scale-[3]" />
 
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white">
-                    {getIcon(program.icon)}
-                  </div>
+                  {program.image && (
+                    <div className="relative h-48 w-full overflow-hidden">
+                      <Image
+                        src={program.image}
+                        alt={program.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent" />
+                    </div>
+                  )}
 
-                  <h2 className="mb-3 text-xl font-bold text-primary transition-colors duration-300 group-hover:text-primary-dark">
-                    {program.title}
-                  </h2>
+                  <div className="p-8">
+                    <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white">
+                      {getIcon(program.icon)}
+                    </div>
 
-                  <p className="mb-4 text-sm leading-relaxed text-zinc-500 line-clamp-4">
-                    {program.description}
-                  </p>
+                    <h2 className="mb-3 text-xl font-bold text-primary transition-colors duration-300 group-hover:text-primary-dark">
+                      {program.title}
+                    </h2>
 
-                  <div className="flex items-center gap-1 text-sm font-semibold text-primary">
-                    <span>Read More</span>
-                    <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
+                    <p className="mb-4 text-sm leading-relaxed text-zinc-500 line-clamp-4">
+                      {program.description}
+                    </p>
+
+                    <div className="flex items-center gap-1 text-sm font-semibold text-primary">
+                      <span>Read More</span>
+                      <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </div>
                   </div>
                 </Link>
               ))}
