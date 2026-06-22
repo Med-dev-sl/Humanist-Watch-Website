@@ -132,19 +132,19 @@ export default function ProgramDetail({ params }: { params: Promise<{ slug: stri
       <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-primary pt-20 sm:pt-24">
         <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-white/[0.03] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-white/[0.05] blur-3xl" />
-        {program.image && (
-          <div className="absolute inset-0">
-            <Image
-              src={program.image}
-              alt={program.title}
-              fill
-              className="object-cover opacity-20"
-              sizes="100vw"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-dark to-primary mix-blend-multiply" />
-          </div>
-        )}
+{program.image && (
+  <div className="absolute inset-0">
+    <Image
+      src={program.image}
+      alt={program.title}
+      fill
+      className="object-cover opacity-40"
+      sizes="100vw"
+      priority
+    />
+    <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary-dark/80 to-primary/80" />
+  </div>
+)}
         <div className="relative mx-auto max-w-4xl px-4 pb-16 pt-12 sm:px-6 sm:pb-20 sm:pt-16">
           <span className="animate-fade-in mb-4 inline-block rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-white/80">
             Program Detail
