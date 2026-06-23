@@ -356,9 +356,75 @@ async function seedBlogPosts() {
   console.log(`Seeded ${posts.length} blog posts.`);
 }
 
+async function seedEvents() {
+  const existingCount = await prisma.event.count();
+  if (existingCount > 0) {
+    console.log("Events already exist. Re-seeding with latest content...");
+    await prisma.event.deleteMany({});
+  }
+
+  const events = [
+    {
+      name: "Annual Community Outreach and Health Fair 2026",
+      slug: "annual-community-outreach-2026",
+      description: "Join HUWASAL for our annual community outreach and health fair, providing free health screenings, educational resources, and support services to communities in the Kailahun district. This year's event will feature mobile clinics, child protection awareness sessions, and livelihood skills demonstrations. Community members will have access to free medical check-ups, family planning services, and nutritional counseling. Our team of healthcare professionals and social workers will be on hand to provide personalized support and guidance.",
+      location: "Kailahun District, Sierra Leone",
+      date: new Date("2026-08-15"),
+      published: true,
+    },
+    {
+      name: "Women's Empowerment Workshop: Skills for Life",
+      slug: "womens-empowerment-workshop-2026",
+      description: "A three-day intensive workshop focused on empowering women through practical skills training in tailoring, soap making, and small business management. Participants will also receive mentorship and startup kits. The workshop includes sessions on financial literacy, digital skills, and leadership development. Guest speakers from successful women-led businesses will share their experiences and insights. Lunch and materials will be provided free of charge.",
+      location: "HUWASAL Training Center, Freetown",
+      date: new Date("2026-09-20"),
+      published: true,
+    },
+    {
+      name: "Youth Leadership and Civic Engagement Forum",
+      slug: "youth-leadership-forum-2026",
+      description: "An engaging forum bringing together young leaders from across Sierra Leone for training in advocacy, community organizing, and civic participation. The forum includes panel discussions, hands-on workshops, and networking opportunities with experienced leaders and policymakers. Topics include effective communication, project management, peacebuilding, and environmental advocacy. Youth participants will develop action plans for community projects they will lead in their respective regions.",
+      location: "Makeni City, Northern Province",
+      date: new Date("2026-10-10"),
+      published: true,
+    },
+    {
+      name: "Child Rights Awareness Week",
+      slug: "child-rights-awareness-week-2026",
+      description: "A week-long campaign dedicated to raising awareness about child rights and protection in Sierra Leone. Activities include school visits, community dialogues, radio discussions, and legal aid clinics for children and families. Our team will distribute educational materials and conduct interactive sessions on child safety, the dangers of child labor, and the importance of education. Parents and guardians are invited to attend special sessions on positive parenting and child welfare.",
+      location: "Multiple locations across Sierra Leone",
+      date: new Date("2026-11-05"),
+      published: true,
+    },
+    {
+      name: "Peacebuilding and Social Cohesion Dialogue",
+      slug: "peacebuilding-dialogue-2026",
+      description: "A community dialogue event focused on promoting peace, reconciliation, and social cohesion in post-conflict communities. The event brings together traditional leaders, youth representatives, women's groups, and local authorities to foster understanding and collaboration. Facilitated discussions will address conflict resolution mechanisms, inter-community relations, and strategies for sustainable peace. Cultural performances and shared meals will help strengthen community bonds.",
+      location: "Kenema City, Eastern Province",
+      date: new Date("2026-12-01"),
+      published: true,
+    },
+    {
+      name: "Climate Action and Environmental Justice Summit",
+      slug: "climate-action-summit-2026",
+      description: "HUWASAL's annual summit on climate action and environmental justice brings together environmental activists, community leaders, and policy advocates to discuss climate challenges facing Sierra Leone and develop community-led solutions. The summit features expert presentations, working groups, and practical training sessions on climate-smart agriculture, reforestation, and sustainable resource management. Participants will collaborate on creating a community climate action roadmap for the coming year.",
+      location: "Bo City, Sierra Leone",
+      date: new Date("2027-01-25"),
+      published: true,
+    },
+  ];
+
+  for (const event of events) {
+    await prisma.event.create({ data: event });
+  }
+
+  console.log(`Seeded ${events.length} events.`);
+}
+
 main()
   .then(() => seedPrograms())
   .then(() => seedBlogPosts())
+  .then(() => seedEvents())
   .catch((e) => {
     console.error(e);
     process.exit(1);
