@@ -102,7 +102,7 @@ export default function ProgramsSection() {
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                       sizes="(max-width: 768px) 100vw, 25vw"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent" />
+                    <div className="absolute inset-0 bg-white sm:bg-gradient-to-t sm:from-white sm:via-white/60 sm:to-transparent" />
                   </div>
                 ) : (
                   <div className="flex h-44 w-full items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
