@@ -15,8 +15,8 @@ export default function Home() {
       <SlideIn direction="left">
         <ProgramsSection />
       </SlideIn>
-      <EventsSection />
       <BlogSection />
+      <EventsSection />
     </>
   );
 }
