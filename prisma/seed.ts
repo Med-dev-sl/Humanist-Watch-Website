@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaClient, PostStatus } from "../app/generated/prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import bcrypt from "bcryptjs";
 
@@ -186,8 +186,179 @@ Provision of educational support for vulnerable children including orphans and d
   console.log(`Seeded ${programs.length} programs.`);
 }
 
+async function seedBlogPosts() {
+  const admin = await prisma.user.findFirst({ where: { role: "SUPERADMIN" } });
+  if (!admin) {
+    console.log("No admin user found. Skipping blog seed.");
+    return;
+  }
+
+  const existingCount = await prisma.blogPost.count();
+  if (existingCount > 0) {
+    console.log("Blog posts already exist. Re-seeding with latest content...");
+    await prisma.blogPost.deleteMany({});
+  }
+
+  const posts = [
+    {
+      title: "HUWASAL Annual Report 2025: A Year of Impact",
+      slug: "huwasal-annual-report-2025",
+      excerpt: "Discover how HUWASAL's programs transformed lives across Sierra Leone in 2025, reaching over 10,000 community members.",
+      content: `HUWASAL Annual Report 2025: A Year of Impact
+
+      This past year has been one of remarkable growth and impact for Humanist Watch Salone. We reached over 10,000 community members across five districts in Sierra Leone.
+
+      Our programs focused on human rights education, economic empowerment, and child protection saw unprecedented engagement from communities.
+
+      Key Achievements
+
+      We trained 500 women in livelihood skills, providing them with the tools to start small businesses and support their families. Our child protection initiatives reached 2,000 children with educational support and legal aid services.
+
+      Through our social accountability programs, we facilitated 50 community dialogue sessions that brought together citizens and local government officials to improve service delivery.
+
+      Looking Ahead
+
+      As we move into 2026, we are expanding our programs to reach more communities. We invite you to join us in this journey of transformation and hope.`,
+      image: null,
+      status: PostStatus.PUBLISHED,
+      publishedAt: new Date("2026-01-15"),
+    },
+    {
+      title: "Empowering Women Through Skills Training in Rural Communities",
+      slug: "empowering-women-skills-training",
+      excerpt: "Our livelihood skills program is transforming the lives of women in rural Sierra Leone, one training session at a time.",
+      content: `Empowering Women Through Skills Training in Rural Communities
+
+      In the rural communities of Sierra Leone, women face unique challenges in accessing economic opportunities. HUWASAL's livelihood skills training program is changing this narrative.
+
+      The program provides practical training in tailoring, soap making, food processing, and small business management. Participants also receive mentorship and startup kits to launch their own enterprises.
+
+      Success Stories
+
+      Mariatu, a 32-year-old mother of three from the Kailahun district, completed our tailoring program in 2025. Today, she runs a thriving tailoring business that supports her entire family.
+
+      "Before this training, I had no way to earn an income. Now I can pay my children's school fees and contribute to my community," Mariatu shares.
+
+      Program Impact
+
+      Since its inception, the program has trained over 500 women, with 80% successfully starting their own businesses. This economic empowerment has ripple effects throughout communities, improving nutrition, education, and overall well-being.`,
+      image: null,
+      status: PostStatus.PUBLISHED,
+      publishedAt: new Date("2026-03-10"),
+    },
+    {
+      title: "Child Protection: Building Safe Spaces for Vulnerable Children",
+      slug: "child-protection-safe-spaces",
+      excerpt: "HUWASAL's child protection initiatives create safe environments where vulnerable children can learn, grow, and thrive.",
+      content: `Child Protection: Building Safe Spaces for Vulnerable Children
+
+      Every child deserves a safe environment to grow, learn, and thrive. In Sierra Leone, many children face threats including child labor, exploitation, and lack of access to education.
+
+      HUWASAL's child protection program works tirelessly to create safe spaces for vulnerable children across the country.
+
+      Our Approach
+
+      We work with communities to identify children at risk and provide them with educational support, legal aid, and psychosocial counseling. Our team also conducts awareness campaigns on child rights and protection.
+
+      Community Engagement
+
+      Through our community outreach programs, we have engaged over 200 community leaders in child protection dialogues. These leaders now serve as child protection advocates in their communities.
+
+      The impact has been significant. School enrollment has increased, and cases of child abuse are being reported and addressed more effectively.`,
+      image: null,
+      status: PostStatus.PUBLISHED,
+      publishedAt: new Date("2026-04-22"),
+    },
+    {
+      title: "Promoting Peace and Social Cohesion in Sierra Leone",
+      slug: "promoting-peace-social-cohesion",
+      excerpt: "Through dialogue and community engagement, HUWASAL is building bridges and fostering peace in diverse communities.",
+      content: `Promoting Peace and Social Cohesion in Sierra Leone
+
+      In a country with a complex history, building and maintaining peace requires continuous effort and dedication. HUWASAL's social cohesion program brings together diverse community members to foster understanding and collaboration.
+
+      Our peacebuilding initiatives focus on dialogue, conflict resolution training, and community mediation. We work with youth, women, and traditional leaders to create platforms for constructive conversation.
+
+      Community Dialogue Sessions
+
+      Our dialogue sessions create safe spaces where community members can discuss sensitive issues, resolve conflicts, and build mutual understanding. These sessions have been instrumental in preventing conflicts and strengthening community bonds.
+
+      Youth Peace Ambassadors
+
+      We train young people as peace ambassadors who then work within their communities to promote peace and prevent violence. These youth leaders organize community events, lead discussions, and serve as role models for their peers.
+
+      The program has reached over 3,000 community members and has contributed to significant reductions in local conflicts.`,
+      image: null,
+      status: PostStatus.PUBLISHED,
+      publishedAt: new Date("2026-05-08"),
+    },
+    {
+      title: "Climate Justice: Communities Taking Action for a Sustainable Future",
+      slug: "climate-justice-communities",
+      excerpt: "Rural communities in Sierra Leone are leading the fight against climate change with support from HUWASAL's environmental programs.",
+      content: `Climate Justice: Communities Taking Action for a Sustainable Future
+
+      Climate change disproportionately affects vulnerable communities in Sierra Leone. HUWASAL's climate justice program empowers communities to take action and advocate for their environmental rights.
+
+      Our program combines environmental education with practical action. We train community members in sustainable farming practices, tree planting, and natural resource management.
+
+      Community-led Initiatives
+
+      In partnership with local communities, we have planted over 10,000 trees across deforested areas. Community members have been trained in climate-smart agriculture, reducing their vulnerability to climate shocks.
+
+      Advocacy for Environmental Justice
+
+      We support communities in advocating for their environmental rights and holding duty-bearers accountable. Our advocacy efforts have contributed to improved environmental policies at the local level.
+
+      The road ahead is long, but with community leadership and collective action, a sustainable future is within reach.`,
+      image: null,
+      status: PostStatus.PUBLISHED,
+      publishedAt: new Date("2026-06-01"),
+    },
+    {
+      title: "Youth Empowerment: Shaping the Leaders of Tomorrow",
+      slug: "youth-empowerment-leaders",
+      excerpt: "HUWASAL invests in young people through leadership training, civic education, and economic opportunity programs.",
+      content: `Youth Empowerment: Shaping the Leaders of Tomorrow
+
+      Young people are the future of Sierra Leone. HUWASAL's youth empowerment programs provide young men and women with the skills, knowledge, and opportunities they need to become leaders in their communities.
+
+      Our programs focus on leadership development, civic education, vocational training, and entrepreneurship. We believe that investing in youth is the most effective way to create lasting change.
+
+      Leadership Training
+
+      Our annual youth leadership camp brings together young people from across the country for intensive training in leadership, advocacy, and community organizing. Graduates of the program go on to lead community initiatives and inspire their peers.
+
+      Civic Education
+
+      We educate young people about their rights and responsibilities as citizens. Through workshops and community projects, participants learn about governance, democracy, and how to engage with local authorities.
+
+      Economic Opportunities
+
+      Vocational training and entrepreneurship support help young people build sustainable livelihoods. From tailoring to information technology, our programs open doors to economic independence.
+
+      Together, we are nurturing the next generation of Sierra Leonean leaders.`,
+      image: null,
+      status: PostStatus.PUBLISHED,
+      publishedAt: new Date("2026-06-15"),
+    },
+  ];
+
+  for (const post of posts) {
+    await prisma.blogPost.create({
+      data: {
+        ...post,
+        userId: admin.id,
+      },
+    });
+  }
+
+  console.log(`Seeded ${posts.length} blog posts.`);
+}
+
 main()
   .then(() => seedPrograms())
+  .then(() => seedBlogPosts())
   .catch((e) => {
     console.error(e);
     process.exit(1);
