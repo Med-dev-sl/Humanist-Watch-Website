@@ -35,7 +35,7 @@ export default function TiltCard({
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={`transition-all duration-200 ease-out ${className}`}
+      className={`w-full transition-all duration-200 ease-out ${className}`}
       style={{ transformStyle: "preserve-3d" }}
     >
       {children}

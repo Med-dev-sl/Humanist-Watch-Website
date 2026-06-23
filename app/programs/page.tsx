@@ -100,7 +100,6 @@ export default function ProgramsPage() {
                 {programs.map((program, i) => (
                   <TiltCard key={program.id}>
                     <Link
-                      key={program.id}
                       href={`/programs/${program.slug}`}
                       className="group block w-full border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
                       style={{ animation: `slide-up 0.5s ease-out ${i * 0.08}s both` }}
