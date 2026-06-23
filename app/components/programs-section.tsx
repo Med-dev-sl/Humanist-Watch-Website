@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import SlideIn from "@/app/components/slide-in";
+import TiltCard from "@/app/components/tilt-card";
 
 type Program = {
   id: string;
@@ -69,71 +71,81 @@ export default function ProgramsSection() {
       <div className="pointer-events-none absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/[0.02] blur-3xl" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mb-14 text-center">
-          <span className="mb-4 inline-block rounded-full border border-primary/10 bg-primary/5 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-primary">
-            Our Programs
-          </span>
-          <h2 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl lg:text-5xl">
-            Programs & Projects
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-zinc-500">
-            HUWASAL works in highly deprived and mostly isolated communities with limited social infrastructures.
-          </p>
-        </div>
+        <SlideIn>
+          <div className="mb-14 text-center">
+            <span className="mb-4 inline-block rounded-full border border-primary/10 bg-primary/5 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-primary">
+              Our Programs
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl lg:text-5xl">
+              Programs & Projects
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-zinc-500">
+              HUWASAL works in highly deprived and mostly isolated communities with limited social infrastructures.
+            </p>
+          </div>
+        </SlideIn>
 
         <div className="flex flex-col items-stretch gap-5 sm:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-4">
           {programs.map((program, i) => (
-            <Link
-              key={program.id}
-              href={`/programs/${program.slug}`}
-              className="group block w-full overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1"
-              style={{ animation: `slide-up 0.5s ease-out ${i * 0.1}s both` }}
-            >
-              <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/[0.03] transition-all duration-500 group-hover:scale-[3]" />
-              {program.image && (
-                <div className="relative h-44 w-full overflow-hidden">
-                  <Image
-                    src={program.image}
-                    alt={program.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent" />
+            <TiltCard key={program.id}>
+              <Link
+                href={`/programs/${program.slug}`}
+                className="group block w-full border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
+                style={{ animation: `slide-up 0.5s ease-out ${i * 0.1}s both` }}
+              >
+                {program.image ? (
+                  <div className="relative h-44 w-full overflow-hidden">
+                    <Image
+                      src={program.image}
+                      alt={program.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 25vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent" />
+                  </div>
+                ) : (
+                  <div className="flex h-44 w-full items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
+                    <svg className="h-10 w-10 text-primary/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+                    </svg>
+                  </div>
+                )}
+                <div className="p-5 sm:p-8" style={{ transform: "translateZ(20px)" }}>
+                  <div className="mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center bg-primary/10 text-primary mx-auto sm:mx-0">
+                    {getIcon(program.icon)}
+                  </div>
+                  <h3 className="mb-3 text-base sm:text-lg font-bold text-primary text-center sm:text-left">
+                    {program.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-zinc-500 line-clamp-3 text-center sm:text-left">
+                    {program.description}
+                  </p>
+                  <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 justify-center sm:justify-start">
+                    <span>Read More</span>
+                    <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
                 </div>
-              )}
-              <div className="p-5 sm:p-8">
-                <div className="mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl bg-primary/10 text-primary mx-auto sm:mx-0">
-                  {getIcon(program.icon)}
-                </div>
-                <h3 className="mb-3 text-base sm:text-lg font-bold text-primary text-center sm:text-left">
-                  {program.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-zinc-500 line-clamp-3 text-center sm:text-left">
-                  {program.description}
-                </p>
-                <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 justify-center sm:justify-start">
-                  <span>Read More</span>
-                  <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </div>
-              </div>
-            </Link>
+              </Link>
+            </TiltCard>
           ))}
         </div>
 
-        <div className="mt-10 text-center">
-          <Link
-            href="/programs"
-            className="group inline-flex items-center gap-2 bg-primary px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:translate-y-[-2px] hover:bg-primary-dark hover:shadow-xl"
-          >
-            <span>View All Programs</span>
-            <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
-        </div>
+        <SlideIn direction="up">
+          <div className="mt-10 text-center">
+            <Link
+              href="/programs"
+              className="group inline-flex items-center gap-2 bg-primary px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:translate-y-[-2px] hover:bg-primary-dark hover:shadow-xl"
+            >
+              <span>View All Programs</span>
+              <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </SlideIn>
       </div>
     </section>
   );

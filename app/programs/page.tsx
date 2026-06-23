@@ -3,6 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import SlideIn from "@/app/components/slide-in";
+import TiltCard from "@/app/components/tilt-card";
 
 type Program = {
   id: string;
@@ -82,61 +84,70 @@ export default function ProgramsPage() {
       </section>
 
       {/* Programs Grid */}
-      <section className="py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
-            </div>
-          ) : programs.length === 0 ? (
-            <div className="py-20 text-center">
-              <p className="text-zinc-400">No programs published yet.</p>
-            </div>
-          ) : (
+      <SlideIn>
+        <section className="py-20 sm:py-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            {loading ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+              </div>
+            ) : programs.length === 0 ? (
+              <div className="py-20 text-center">
+                <p className="text-zinc-400">No programs published yet.</p>
+              </div>
+            ) : (
               <div className="flex flex-col items-stretch gap-6 sm:gap-8 md:grid md:grid-cols-2 lg:grid-cols-3">
                 {programs.map((program, i) => (
-                  <Link
-                    key={program.id}
-                    href={`/programs/${program.slug}`}
-                    className="group block w-full overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1"
-                    style={{ animation: `slide-up 0.5s ease-out ${i * 0.08}s both` }}
-                  >
-                    <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/[0.03] transition-all duration-500 group-hover:scale-[3]" />
-                    {program.image && (
-                      <div className="relative h-48 w-full overflow-hidden">
-                        <Image
-                          src={program.image}
-                          alt={program.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent" />
+                  <TiltCard key={program.id}>
+                    <Link
+                      key={program.id}
+                      href={`/programs/${program.slug}`}
+                      className="group block w-full border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
+                      style={{ animation: `slide-up 0.5s ease-out ${i * 0.08}s both` }}
+                    >
+                      {program.image ? (
+                        <div className="relative h-48 w-full overflow-hidden">
+                          <Image
+                            src={program.image}
+                            alt={program.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent" />
+                        </div>
+                      ) : (
+                        <div className="flex h-48 w-full items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
+                          <svg className="h-12 w-12 text-primary/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+                          </svg>
+                        </div>
+                      )}
+                      <div className="p-5 sm:p-8" style={{ transform: "translateZ(20px)" }}>
+                        <div className="mb-4 sm:mb-5 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center bg-primary/10 text-primary mx-auto sm:mx-0">
+                          {getIcon(program.icon)}
+                        </div>
+                        <h2 className="mb-3 text-lg sm:text-xl font-bold text-primary text-center sm:text-left">
+                          {program.title}
+                        </h2>
+                        <p className="mb-4 text-sm leading-relaxed text-zinc-500 line-clamp-4 text-center sm:text-left">
+                          {program.description}
+                        </p>
+                        <div className="flex items-center gap-1 text-sm font-semibold text-primary justify-center sm:justify-start">
+                          <span>Read More</span>
+                          <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </div>
                       </div>
-                    )}
-                    <div className="p-5 sm:p-8">
-                      <div className="mb-4 sm:mb-5 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl bg-primary/10 text-primary mx-auto sm:mx-0">
-                        {getIcon(program.icon)}
-                      </div>
-                      <h2 className="mb-3 text-lg sm:text-xl font-bold text-primary text-center sm:text-left">
-                        {program.title}
-                      </h2>
-                      <p className="mb-4 text-sm leading-relaxed text-zinc-500 line-clamp-4 text-center sm:text-left">
-                        {program.description}
-                      </p>
-                      <div className="flex items-center gap-1 text-sm font-semibold text-primary justify-center sm:justify-start">
-                        <span>Read More</span>
-                        <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </TiltCard>
                 ))}
               </div>
-          )}
-        </div>
-      </section>
+            )}
+          </div>
+        </section>
+      </SlideIn>
     </div>
   );
 }

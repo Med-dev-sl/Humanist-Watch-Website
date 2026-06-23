@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import SlideIn from "@/app/components/slide-in";
+import TiltCard from "@/app/components/tilt-card";
 
 type BlogPost = {
   id: string;
@@ -59,47 +60,54 @@ export default function BlogSection() {
 
         <div className="flex flex-col items-stretch gap-5 sm:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-4">
           {posts.map((post, i) => (
-            <Link
-              key={post.id}
-              href={`/blog/${post.slug}`}
-              className="group block w-full overflow-hidden rounded-2xl border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1"
-              style={{ animation: `slide-up 0.5s ease-out ${i * 0.1}s both` }}
-            >
-              {post.image && (
-                <div className="relative h-44 w-full overflow-hidden">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 25vw"
-                  />
-                </div>
-              )}
-
-              <div className="p-5 sm:p-8">
-                <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-wider text-primary/50">
-                  {formatDate(post.publishedAt ?? post.createdAt)}
-                </span>
-
-                <h3 className="mb-3 text-base sm:text-lg font-bold text-primary group-hover:text-primary-dark transition-colors duration-300 text-center sm:text-left">
-                  {post.title}
-                </h3>
-
-                {post.excerpt && (
-                  <p className="text-sm leading-relaxed text-zinc-500 line-clamp-3 text-center sm:text-left">
-                    {post.excerpt}
-                  </p>
+            <TiltCard key={post.id}>
+              <Link
+                href={`/blog/${post.slug}`}
+                className="group block w-full border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
+                style={{ animation: `slide-up 0.5s ease-out ${i * 0.1}s both` }}
+              >
+                {post.image ? (
+                  <div className="relative h-44 w-full overflow-hidden">
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 25vw"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-44 w-full items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
+                    <svg className="h-10 w-10 text-primary/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
+                    </svg>
+                  </div>
                 )}
 
-                <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 justify-center sm:justify-start">
-                  <span>Read More</span>
-                  <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
+                <div className="p-5 sm:p-8" style={{ transform: "translateZ(20px)" }}>
+                  <span className="mb-3 inline-block text-xs font-semibold uppercase tracking-wider text-primary/50">
+                    {formatDate(post.publishedAt ?? post.createdAt)}
+                  </span>
+
+                  <h3 className="mb-3 text-base sm:text-lg font-bold text-primary group-hover:text-primary-dark transition-colors duration-300 text-center sm:text-left">
+                    {post.title}
+                  </h3>
+
+                  {post.excerpt && (
+                    <p className="text-sm leading-relaxed text-zinc-500 line-clamp-3 text-center sm:text-left">
+                      {post.excerpt}
+                    </p>
+                  )}
+
+                  <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 justify-center sm:justify-start">
+                    <span>Read More</span>
+                    <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </TiltCard>
           ))}
         </div>
 
