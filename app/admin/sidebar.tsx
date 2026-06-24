@@ -20,13 +20,14 @@ const sidebarLinks = [
   { href: "/admin/contacts", label: "Contact Messages", icon: "mail", badge: "unread" },
   { href: "/admin/volunteers", label: "Volunteers", icon: "handshake", badge: "pending" },
   { href: "/admin/settings", label: "Site Settings", icon: "settings" },
-  { href: "/admin/donations", label: "Donations", icon: "payments" },
+  { href: "/admin/donations", label: "Donations", icon: "payments", badge: "unreadDonation" },
 ];
 
 export default function AdminSidebar({ userName }: { userName: string }) {
   const pathname = usePathname();
   const [pendingCount, setPendingCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadDonationCount, setUnreadDonationCount] = useState(0);
 
   useEffect(() => {
     fetch("/api/admin/volunteers?status=pending")
@@ -44,6 +45,16 @@ export default function AdminSidebar({ userName }: { userName: string }) {
       .then((data) => {
         const arr = Array.isArray(data) ? data : data.contacts ?? [];
         setUnreadCount(arr.length);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/admin/donations?read=false")
+      .then((r) => r.json())
+      .then((data) => {
+        const arr = Array.isArray(data) ? data : data.donations ?? [];
+        setUnreadDonationCount(arr.length);
       })
       .catch(() => {});
   }, []);
@@ -69,7 +80,7 @@ export default function AdminSidebar({ userName }: { userName: string }) {
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
         {sidebarLinks.map((link, i) => {
           const isActive = pathname === link.href;
-          const badgeCount = link.badge === "pending" ? pendingCount : link.badge === "unread" ? unreadCount : 0;
+          const badgeCount = link.badge === "pending" ? pendingCount : link.badge === "unread" ? unreadCount : link.badge === "unreadDonation" ? unreadDonationCount : 0;
           return (
             <Link
               key={link.href}

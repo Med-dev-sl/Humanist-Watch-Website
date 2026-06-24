@@ -767,6 +767,28 @@ Requirements:
   console.log(`Seeded ${jobs.length} jobs.`);
 }
 
+async function seedDonations() {
+  const existingCount = await prisma.donation.count();
+  if (existingCount > 0) {
+    console.log("Donations already exist. Re-seeding with latest content...");
+    await prisma.donation.deleteMany({});
+  }
+
+  const donations = [
+    { amount: 500, currency: "USD", name: "John Kamara", email: "john.k@example.com", message: "Keep up the great work!", anonymous: false, read: false },
+    { amount: 250, currency: "USD", name: "Sarah Williams", email: "sarah.w@example.com", message: "For the children of Sierra Leone", anonymous: false, read: false },
+    { amount: 100, currency: "USD", name: null, email: null, message: "Anonymous support", anonymous: true, read: false },
+    { amount: 1000, currency: "USD", name: "Michael Bangura", email: "michael.b@example.com", message: "In memory of my mother who believed in community", anonymous: false, read: true },
+    { amount: 75, currency: "USD", name: "Emily Johnson", email: "emily.j@example.com", message: null, anonymous: false, read: true },
+  ];
+
+  for (const donation of donations) {
+    await prisma.donation.create({ data: donation });
+  }
+
+  console.log(`Seeded ${donations.length} donations.`);
+}
+
 main()
   .then(() => seedPrograms())
   .then(() => seedBlogPosts())
@@ -776,6 +798,7 @@ main()
   .then(() => seedBeneficiaries())
   .then(() => seedGallery())
   .then(() => seedJobs())
+  .then(() => seedDonations())
   .catch((e) => {
     console.error(e);
     process.exit(1);

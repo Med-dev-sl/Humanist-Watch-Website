@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
   const q = searchParams.get("q") || "";
   const from = searchParams.get("from");
   const to = searchParams.get("to");
+  const read = searchParams.get("read");
 
   const where: Record<string, unknown> = {};
 
@@ -28,6 +29,8 @@ export async function GET(req: NextRequest) {
     where.OR = [
       { message: { contains: q, mode: "insensitive" } },
       { currency: { contains: q, mode: "insensitive" } },
+      { name: { contains: q, mode: "insensitive" } },
+      { email: { contains: q, mode: "insensitive" } },
     ];
   }
 
@@ -38,6 +41,9 @@ export async function GET(req: NextRequest) {
     where.createdAt = createdAt;
   }
 
+  if (read === "true") where.read = true;
+  else if (read === "false") where.read = false;
+
   const donations = await prisma.donation.findMany({
     where,
     orderBy: { createdAt: "desc" },
@@ -47,4 +53,23 @@ export async function GET(req: NextRequest) {
   });
 
   return NextResponse.json(donations);
+}
+
+export async function PUT(req: NextRequest) {
+  const payload = await auth();
+  if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const body = await req.json();
+  const { id, read: markRead } = body;
+
+  if (!id) {
+    return NextResponse.json({ error: "Missing donation id" }, { status: 400 });
+  }
+
+  await prisma.donation.update({
+    where: { id },
+    data: { read: markRead ?? true },
+  });
+
+  return NextResponse.json({ success: true });
 }

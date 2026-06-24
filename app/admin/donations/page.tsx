@@ -16,8 +16,11 @@ type Donation = {
   id: string;
   amount: number;
   currency: string;
+  name: string | null;
+  email: string | null;
   message: string | null;
   anonymous: boolean;
+  read: boolean;
   createdAt: string;
   userId: string | null;
   user: User | null;
@@ -49,19 +52,40 @@ export default function AdminDonations() {
     fetchDonations();
   }, [fetchDonations]);
 
+  async function toggleRead(donation: Donation) {
+    try {
+      const res = await fetch("/api/admin/donations", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: donation.id, read: !donation.read }),
+      });
+      if (!res.ok) throw new Error("Failed to update");
+      setDonations((prev) =>
+        prev.map((d) => (d.id === donation.id ? { ...d, read: !d.read } : d))
+      );
+      showToast("success", "Updated", donation.read ? "Marked as unread" : "Marked as read");
+    } catch {
+      showToast("error", "Error", "Failed to update donation");
+    }
+  }
+
   function formatAmount(amount: number, currency: string) {
     return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
   }
 
   function getDonorName(donation: Donation) {
-    if (donation.anonymous || !donation.userId) return "Anonymous";
-    return donation.user?.name ?? "Anonymous";
+    if (donation.anonymous) return "Anonymous";
+    return donation.name ?? donation.user?.name ?? "Anonymous";
   }
+
+  const totalUnread = donations.filter((d) => !d.read).length;
 
   const filtered = donations.filter((d) => {
     if (!search) return true;
     const q = search.toLowerCase();
     if ((d.message ?? "").toLowerCase().includes(q)) return true;
+    if ((d.name ?? "").toLowerCase().includes(q)) return true;
+    if ((d.email ?? "").toLowerCase().includes(q)) return true;
     const donor = getDonorName(d);
     if (donor.toLowerCase().includes(q)) return true;
     return false;
@@ -69,7 +93,10 @@ export default function AdminDonations() {
 
   return (
     <div className="p-8">
-      <PageHeader title="Donation Management" description="Track donations and fundraising." />
+      <PageHeader
+        title="Donation Management"
+        description={`Track donations and fundraising. ${totalUnread > 0 ? `${totalUnread} unread donation${totalUnread !== 1 ? "s" : ""}.` : ""}`}
+      />
 
       {/* Toolbar */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -111,31 +138,57 @@ export default function AdminDonations() {
           </div>
         ) : (
           <div className="divide-y divide-zinc-100">
-            <div className="grid grid-cols-[130px_1fr_1fr_130px] gap-4 bg-zinc-50/80 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+            <div className="grid grid-cols-[100px_140px_1fr_120px_100px] gap-4 bg-zinc-50/80 px-6 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <span>Status</span>
               <span>Amount</span>
               <span>Donor</span>
-              <span>Message</span>
-              <span className="text-center">Date</span>
+              <span>Date</span>
+              <span className="text-center">Action</span>
             </div>
             {filtered.map((donation, i) => (
               <div
                 key={donation.id}
                 style={{ animationDelay: `${i * 40}ms` }}
-                className="animate-slide-up grid grid-cols-[130px_1fr_1fr_130px] gap-4 px-6 py-4 text-sm transition-colors hover:bg-zinc-50"
+                className={`animate-slide-up grid grid-cols-[100px_140px_1fr_120px_100px] gap-4 px-6 py-4 text-sm transition-colors hover:bg-zinc-50 ${!donation.read ? "bg-primary/[0.02]" : ""}`}
               >
+                <div className="flex items-center">
+                  <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+                    donation.read
+                      ? "bg-zinc-100 text-zinc-500"
+                      : "bg-blue-100 text-blue-700"
+                  }`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${donation.read ? "bg-zinc-400" : "bg-blue-500 animate-pulse"}`} />
+                    {donation.read ? "Read" : "New"}
+                  </span>
+                </div>
                 <div className="flex items-center">
                   <span className="font-semibold text-primary">{formatAmount(donation.amount, donation.currency)}</span>
                 </div>
-                <div className="min-w-0 flex items-center">
+                <div className="min-w-0 flex flex-col items-start justify-center">
                   <span className="truncate text-zinc-600">{getDonorName(donation)}</span>
+                  {(donation.email || donation.user?.email) && (
+                    <span className="truncate text-[11px] text-zinc-400">{donation.email ?? donation.user?.email}</span>
+                  )}
+                  {donation.message && (
+                    <span className="mt-0.5 truncate text-[11px] italic text-zinc-400" title={donation.message}>
+                      &ldquo;{donation.message}&rdquo;
+                    </span>
+                  )}
                 </div>
-                <div className="min-w-0 flex items-center">
-                  <p className="truncate text-zinc-600" title={donation.message ?? ""}>
-                    {donation.message || <span className="text-zinc-300 italic">No message</span>}
-                  </p>
-                </div>
-                <div className="flex items-center justify-center text-xs text-zinc-400">
+                <div className="flex items-center text-xs text-zinc-400">
                   {new Date(donation.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                </div>
+                <div className="flex items-center justify-center">
+                  <button
+                    onClick={() => toggleRead(donation)}
+                    className={`rounded-lg px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider transition-all ${
+                      donation.read
+                        ? "bg-zinc-100 text-zinc-500 hover:bg-blue-100 hover:text-blue-700"
+                        : "bg-primary/10 text-primary hover:bg-primary hover:text-white"
+                    }`}
+                  >
+                    {donation.read ? "Unread" : "Read"}
+                  </button>
                 </div>
               </div>
             ))}
@@ -146,10 +199,10 @@ export default function AdminDonations() {
       {donations.length > 0 && (
         <p className="mt-4 text-xs text-zinc-400">
           Showing {filtered.length} of {donations.length} donation{donations.length !== 1 ? "s" : ""}
+          {totalUnread > 0 && ` (${totalUnread} unread)`}
         </p>
       )}
 
-      {/* Success/Error Modal */}
       <Modal
         open={!!modal}
         type={modal?.type ?? "success"}

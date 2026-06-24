@@ -246,8 +246,11 @@ model Donation {
   id        String   @id @default(cuid())
   amount    Float
   currency  String   @default("USD")
+  name      String?
+  email     String?
   message   String?
   anonymous Boolean  @default(false)
+  read      Boolean  @default(false)
   createdAt DateTime @default(now())
 
   userId   String?
