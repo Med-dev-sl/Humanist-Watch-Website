@@ -42,7 +42,7 @@ export default function ContactSection() {
       <div className="pointer-events-none absolute -right-40 -top-40 h-80 w-80 rounded-full bg-primary/[0.03] blur-3xl" />
       <div className="pointer-events-none absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/[0.02] blur-3xl" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
         <SlideIn>
           <div className="mb-14 text-center">
             <span className="mb-4 inline-block rounded-full border border-primary/10 bg-primary/5 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-primary">
@@ -57,10 +57,10 @@ export default function ContactSection() {
           </div>
         </SlideIn>
 
-        <div className="grid gap-10 lg:grid-cols-5">
+        <div className="grid gap-8 sm:gap-10 lg:grid-cols-12">
           {/* Contact Info */}
           <SlideIn direction="left">
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-4 space-y-6">
               <div className="animate-slide-up flex items-start gap-4 rounded-2xl border border-primary/10 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/5">
                 <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -102,7 +102,7 @@ export default function ContactSection() {
 
           {/* Contact Form */}
           <SlideIn direction="right">
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-8">
               {submitted ? (
                 <div className="animate-scale-in flex flex-col items-center gap-4 rounded-2xl border border-primary/10 bg-white p-12 text-center shadow-lg">
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
