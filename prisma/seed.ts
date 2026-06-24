@@ -421,10 +421,92 @@ async function seedEvents() {
   console.log(`Seeded ${events.length} events.`);
 }
 
+async function seedTeamMembers() {
+  const existingCount = await prisma.teamMember.count();
+  if (existingCount > 0) {
+    console.log("Team members already exist. Re-seeding with latest content...");
+    await prisma.teamMember.deleteMany({});
+  }
+
+  const members = [
+    {
+      name: "Dr. Fatmata Kamara",
+      role: "Executive Director",
+      bio: "Dr. Fatmata Kamara is the founding Executive Director of Humanist Watch Salone (HUWASAL). With over 20 years of experience in human rights advocacy and community development, she has led numerous initiatives that have transformed lives across Sierra Leone. She holds a PhD in Development Studies from the University of Sierra Leone and has received several international awards for her work in women's empowerment and child protection. Dr. Kamara is passionate about creating sustainable change through community-led initiatives and believes that every individual has the power to make a difference.",
+      email: "fatmata.kamara@huwasal.com",
+      order: 1,
+      published: true,
+    },
+    {
+      name: "Mohamed Sesay",
+      role: "Programs Director",
+      bio: "Mohamed Sesay oversees the design, implementation, and monitoring of all HUWASAL programs. With a Master's degree in Project Management and over 15 years of experience in the NGO sector, he brings strategic vision and operational excellence to the organization. Mohamed has successfully managed multi-donor projects focused on governance, social accountability, and community health. He is committed to ensuring that HUWASAL's programs deliver measurable impact and are responsive to community needs.",
+      email: "mohamed.sesay@huwasal.com",
+      order: 2,
+      published: true,
+    },
+    {
+      name: "Hawa Bangura",
+      role: "Finance & Admin Manager",
+      bio: "Hawa Bangura manages the financial operations and administrative functions of HUWASAL. She is a certified accountant with over 12 years of experience in financial management within the development sector. Hawa ensures transparency, accountability, and compliance with donor requirements across all organizational activities. She holds a Bachelor's degree in Accounting and Finance and is known for her meticulous attention to detail and commitment to good governance.",
+      email: "hawa.bangura@huwasal.com",
+      order: 3,
+      published: true,
+    },
+    {
+      name: "Alhaji Koroma",
+      role: "Field Operations Coordinator",
+      bio: "Alhaji Koroma coordinates HUWASAL's field operations across five districts in Sierra Leone. With extensive experience in community engagement and grassroots organizing, he ensures that programs reach the most vulnerable populations in remote and underserved areas. Alhaji has a background in social work and community development, and is deeply respected by community leaders for his dedication, cultural sensitivity, and ability to build trust with diverse groups.",
+      email: "alhaji.koroma@huwasal.com",
+      order: 4,
+      published: true,
+    },
+    {
+      name: "Mariatu Jalloh",
+      role: "Child Protection Officer",
+      bio: "Mariatu Jalloh leads HUWASAL's child protection programs, focusing on preventing child abuse, exploitation, and violence. She has a law degree and specialized training in child rights and protection. Mariatu works closely with communities, schools, and law enforcement agencies to create safe environments for children. She has successfully advocated for the reintegration of over 200 street-connected children with their families and provides legal aid to child victims of abuse.",
+      email: "mariatu.jalloh@huwasal.com",
+      order: 5,
+      published: true,
+    },
+    {
+      name: "Sorie Kamara",
+      role: "Monitoring & Evaluation Officer",
+      bio: "Sorie Kamara is responsible for monitoring and evaluating the impact of HUWASAL's programs. He holds a Master's degree in Statistics and has over eight years of experience in data collection, analysis, and reporting. Sorie designs M&E frameworks, conducts field assessments, and ensures that program data informs decision-making and continuous improvement. His work has been instrumental in demonstrating the effectiveness of HUWASAL's interventions to donors and stakeholders.",
+      email: "sorie.kamara@huwasal.com",
+      order: 6,
+      published: true,
+    },
+    {
+      name: "Aminata Sankoh",
+      role: "Gender & Advocacy Officer",
+      bio: "Aminata Sankoh leads HUWASAL's gender equality and advocacy initiatives. She is a passionate feminist with a Bachelor's degree in Gender Studies and extensive experience in campaigning for women's rights and social justice. Aminata has organized numerous community dialogues on gender-based violence, facilitated leadership training for women, and successfully advocated for policy changes at the local government level. She believes that gender equality is essential for sustainable development.",
+      email: "aminata.sankoh@huwasal.com",
+      order: 7,
+      published: true,
+    },
+    {
+      name: "Ibrahim Turay",
+      role: "Communications Officer",
+      bio: "Ibrahim Turay manages HUWASAL's communications, media relations, and digital presence. He is a skilled journalist and content creator with a degree in Mass Communications. Ibrahim produces compelling stories that highlight the impact of HUWASAL's work, manages social media platforms, and engages with local and international media outlets. His storytelling has helped raise awareness about the challenges facing marginalized communities and has mobilized support for HUWASAL's programs.",
+      email: "ibrahim.turay@huwasal.com",
+      order: 8,
+      published: true,
+    },
+  ];
+
+  for (const member of members) {
+    await prisma.teamMember.create({ data: member });
+  }
+
+  console.log(`Seeded ${members.length} team members.`);
+}
+
 main()
   .then(() => seedPrograms())
   .then(() => seedBlogPosts())
   .then(() => seedEvents())
+  .then(() => seedTeamMembers())
   .catch((e) => {
     console.error(e);
     process.exit(1);

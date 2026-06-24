@@ -3,6 +3,7 @@ import WhoWeAreSection from "@/app/components/who-we-are-section";
 import ProgramsSection from "@/app/components/programs-section";
 import EventsSection from "@/app/components/events-section";
 import BlogSection from "@/app/components/blog-section";
+import TeamSection from "@/app/components/team-section";
 import SlideIn from "@/app/components/slide-in";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       </SlideIn>
       <BlogSection />
       <EventsSection />
+      <TeamSection />
     </>
   );
 }
