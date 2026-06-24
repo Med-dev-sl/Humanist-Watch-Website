@@ -62,8 +62,8 @@ export default function ContactPage() {
         <div className="pointer-events-none absolute -right-40 -top-40 h-80 w-80 rounded-full bg-primary/[0.03] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/[0.02] blur-3xl" />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+        <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-stretch">
             {/* Contact Form */}
             <SlideIn direction="left">
               <div className="min-w-0 flex-1">
@@ -169,7 +169,7 @@ export default function ContactPage() {
 
             {/* Contact Info */}
             <SlideIn direction="right">
-              <div className="w-full lg:w-80 xl:w-96 flex-shrink-0 space-y-6">
+              <div className="w-full lg:w-[28rem] xl:w-[32rem] flex-shrink-0 space-y-6">
                 <div className="animate-slide-up flex items-start gap-4 rounded-2xl border border-primary/10 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/5">
                   <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
