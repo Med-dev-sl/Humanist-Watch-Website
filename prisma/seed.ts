@@ -653,6 +653,120 @@ async function seedGallery() {
   console.log(`Seeded ${galleries.length} galleries with images.`);
 }
 
+async function seedJobs() {
+  const existingCount = await prisma.job.count();
+  if (existingCount > 0) {
+    console.log("Jobs already exist. Re-seeding with latest content...");
+    await prisma.job.deleteMany({});
+  }
+
+  const jobs = [
+    {
+      title: "Field Officer – Community Outreach",
+      slug: "field-officer-community-outreach",
+      description: "Join our team to facilitate community-based human rights and development programs in rural Sierra Leone.",
+      content: `We are seeking a dedicated Field Officer to support our community outreach programs in Kenema and surrounding districts.
+
+Key Responsibilities:
+• Plan and execute community sensitization campaigns on human rights and governance
+• Facilitate training sessions for local community groups
+• Monitor and report on program activities and outcomes
+• Build and maintain relationships with community leaders and stakeholders
+• Support data collection and impact assessment activities
+
+Requirements:
+• Diploma or Degree in Social Work, Development Studies, or related field
+• Minimum 2 years experience in community development work
+• Strong interpersonal and communication skills
+• Ability to work in rural and remote communities
+• Fluency in Krio and at least one local language (Mende, Temne, or Limba)
+• Must be based in or willing to relocate to Kenema`,
+      location: "Kenema, Sierra Leone",
+      type: "full-time",
+      deadline: new Date("2026-08-31"),
+      published: true,
+    },
+    {
+      title: "Programs Manager",
+      slug: "programs-manager",
+      description: "Lead the design, implementation, and monitoring of HUWASAL's development programs.",
+      content: `We are looking for an experienced Programs Manager to oversee HUWASAL's program portfolio and ensure impactful delivery.
+
+Key Responsibilities:
+• Lead program design, planning, and budgeting processes
+• Supervise program staff and coordinate with partner organizations
+• Ensure compliance with donor requirements and organizational policies
+• Prepare program reports and facilitate monitoring and evaluation
+• Represent HUWASAL in coordination meetings and stakeholder engagements
+
+Requirements:
+• Bachelor's or Master's Degree in Development Studies, Project Management, or related field
+• 5+ years experience in program management, preferably in the NGO sector
+• Proven track record in donor reporting and grant management
+• Strong leadership and team management skills
+• Excellent written and spoken English`,
+      location: "Kenema, Sierra Leone",
+      type: "full-time",
+      deadline: new Date("2026-09-15"),
+      published: true,
+    },
+    {
+      title: "Communications Assistant",
+      slug: "communications-assistant",
+      description: "Support HUWASAL's communications, digital media, and public relations activities.",
+      content: `We are seeking a creative Communications Assistant to help amplify HUWASAL's voice and impact through various media channels.
+
+Key Responsibilities:
+• Manage social media accounts and create engaging content
+• Write and distribute press releases and newsletters
+• Document program activities through photos and videos
+• Maintain the organization's website and digital archives
+• Support event planning and media relations
+
+Requirements:
+• Degree or Diploma in Mass Communications, Journalism, or related field
+• Strong writing and photography skills
+• Experience with social media management tools
+• Knowledge of basic graphic design (Canva, Adobe Suite) is an advantage
+• Ability to work in a fast-paced environment`,
+      location: "Kenema, Sierra Leone",
+      type: "full-time",
+      deadline: new Date("2026-10-01"),
+      published: true,
+    },
+    {
+      title: "Monitoring & Evaluation Intern",
+      slug: "monitoring-evaluation-intern",
+      description: "Gain hands-on experience in monitoring, evaluation, and learning within a dynamic NGO setting.",
+      content: `This internship offers a valuable opportunity to learn about M&E practices in the development sector.
+
+Key Responsibilities:
+• Assist in data collection, entry, and verification
+• Support the preparation of monitoring reports
+• Help maintain program databases
+• Participate in field visits for data verification
+• Contribute to lessons learned documentation
+
+Requirements:
+• Currently pursuing or recently completed a degree in Statistics, Economics, Development Studies, or related field
+• Basic knowledge of data analysis tools (Excel, SPSS, or similar)
+• Strong attention to detail
+• Willingness to travel to field locations
+• Duration: 6 months (renewable)`,
+      location: "Kenema, Sierra Leone",
+      type: "internship",
+      deadline: new Date("2026-12-31"),
+      published: true,
+    },
+  ];
+
+  for (const job of jobs) {
+    await prisma.job.create({ data: job });
+  }
+
+  console.log(`Seeded ${jobs.length} jobs.`);
+}
+
 main()
   .then(() => seedPrograms())
   .then(() => seedBlogPosts())
@@ -661,6 +775,7 @@ main()
   .then(() => seedPartners())
   .then(() => seedBeneficiaries())
   .then(() => seedGallery())
+  .then(() => seedJobs())
   .catch((e) => {
     console.error(e);
     process.exit(1);
