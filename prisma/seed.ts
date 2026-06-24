@@ -502,11 +502,39 @@ async function seedTeamMembers() {
   console.log(`Seeded ${members.length} team members.`);
 }
 
+async function seedPartners() {
+  const existingCount = await prisma.partner.count();
+  if (existingCount > 0) {
+    console.log("Partners already exist. Re-seeding with latest content...");
+    await prisma.partner.deleteMany({});
+  }
+
+  const partners = [
+    { name: "UNICEF Sierra Leone", website: "https://www.unicef.org/sierraleone", order: 1, published: true },
+    { name: "UNDP Sierra Leone", website: "https://www.undp.org/sierra-leone", order: 2, published: true },
+    { name: "Oxfam International", website: "https://www.oxfam.org", order: 3, published: true },
+    { name: "ActionAid Sierra Leone", website: "https://sierraleone.actionaid.org", order: 4, published: true },
+    { name: "Plan International", website: "https://plan-international.org/sierra-leone", order: 5, published: true },
+    { name: "World Vision Sierra Leone", website: "https://www.wvi.org/sierra-leone", order: 6, published: true },
+    { name: "Christian Aid", website: "https://www.christianaid.org.uk", order: 7, published: true },
+    { name: "Save the Children", website: "https://www.savethechildren.net", order: 8, published: true },
+    { name: "IRC Sierra Leone", website: "https://www.rescue.org/country/sierra-leone", order: 9, published: true },
+    { name: "Sierra Leone Red Cross", website: "https://www.redcross.sl", order: 10, published: true },
+  ];
+
+  for (const partner of partners) {
+    await prisma.partner.create({ data: partner });
+  }
+
+  console.log(`Seeded ${partners.length} partners.`);
+}
+
 main()
   .then(() => seedPrograms())
   .then(() => seedBlogPosts())
   .then(() => seedEvents())
   .then(() => seedTeamMembers())
+  .then(() => seedPartners())
   .catch((e) => {
     console.error(e);
     process.exit(1);

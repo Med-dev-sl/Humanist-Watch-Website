@@ -4,6 +4,7 @@ import ProgramsSection from "@/app/components/programs-section";
 import EventsSection from "@/app/components/events-section";
 import BlogSection from "@/app/components/blog-section";
 import TeamSection from "@/app/components/team-section";
+import PartnersSection from "@/app/components/partners-section";
 import SlideIn from "@/app/components/slide-in";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <BlogSection />
       <EventsSection />
       <TeamSection />
+      <PartnersSection />
     </>
   );
 }
