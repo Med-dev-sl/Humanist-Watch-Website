@@ -17,7 +17,7 @@ const sidebarLinks = [
   { href: "/admin/partners", label: "Partners", icon: "handshake" },
   { href: "/admin/team", label: "Team Members", icon: "badge" },
   { href: "/admin/jobs", label: "Jobs", icon: "work" },
-  { href: "/admin/contacts", label: "Contact Messages", icon: "mail" },
+  { href: "/admin/contacts", label: "Contact Messages", icon: "mail", badge: "unread" },
   { href: "/admin/volunteers", label: "Volunteers", icon: "handshake", badge: "pending" },
   { href: "/admin/settings", label: "Site Settings", icon: "settings" },
   { href: "/admin/donations", label: "Donations", icon: "payments" },
@@ -26,6 +26,7 @@ const sidebarLinks = [
 export default function AdminSidebar({ userName }: { userName: string }) {
   const pathname = usePathname();
   const [pendingCount, setPendingCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     fetch("/api/admin/volunteers?status=pending")
@@ -33,6 +34,16 @@ export default function AdminSidebar({ userName }: { userName: string }) {
       .then((data) => {
         const arr = Array.isArray(data) ? data : data.volunteers ?? [];
         setPendingCount(arr.length);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/admin/contacts?read=false")
+      .then((r) => r.json())
+      .then((data) => {
+        const arr = Array.isArray(data) ? data : data.contacts ?? [];
+        setUnreadCount(arr.length);
       })
       .catch(() => {});
   }, []);
@@ -58,6 +69,7 @@ export default function AdminSidebar({ userName }: { userName: string }) {
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
         {sidebarLinks.map((link, i) => {
           const isActive = pathname === link.href;
+          const badgeCount = link.badge === "pending" ? pendingCount : link.badge === "unread" ? unreadCount : 0;
           return (
             <Link
               key={link.href}
@@ -74,9 +86,9 @@ export default function AdminSidebar({ userName }: { userName: string }) {
               )}
               <Icon name={link.icon} className="relative z-10 text-xl" />
               <span className="relative z-10">{link.label}</span>
-              {link.badge === "pending" && pendingCount > 0 && (
+              {badgeCount > 0 && (
                 <span className="relative z-10 ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white animate-pulse">
-                  {pendingCount > 99 ? "99+" : pendingCount}
+                  {badgeCount > 99 ? "99+" : badgeCount}
                 </span>
               )}
               {isActive && (
