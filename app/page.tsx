@@ -7,6 +7,7 @@ import TeamSection from "@/app/components/team-section";
 import PartnersSection from "@/app/components/partners-section";
 import VolunteerSection from "@/app/components/volunteer-section";
 import ContactSection from "@/app/components/contact-section";
+import BeneficiariesSection from "@/app/components/beneficiaries-section";
 import SlideIn from "@/app/components/slide-in";
 
 export default function Home() {
@@ -25,6 +26,7 @@ export default function Home() {
       <PartnersSection />
       <VolunteerSection />
       <ContactSection />
+      <BeneficiariesSection />
     </>
   );
 }

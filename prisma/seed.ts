@@ -529,12 +529,75 @@ async function seedPartners() {
   console.log(`Seeded ${partners.length} partners.`);
 }
 
+async function seedBeneficiaries() {
+  const existingCount = await prisma.beneficiary.count();
+  if (existingCount > 0) {
+    console.log("Beneficiaries already exist. Re-seeding with latest content...");
+    await prisma.beneficiary.deleteMany({});
+  }
+
+  const beneficiaries = [
+    {
+      name: "Mariatu Sesay",
+      slug: "mariatu-sesay",
+      location: "Kenema District",
+      age: 32,
+      story: "Mariatu was forced out of school at 14 and faced years of economic hardship. Through HUWASAL's women empowerment program, she received vocational training in tailoring and small business management. Today, she runs a thriving tailoring shop employing three other women, and her children are all enrolled in school.",
+      description: "A single mother of three who transformed her life through vocational training.",
+      published: true,
+    },
+    {
+      name: "Sahr Lebbie",
+      slug: "sahr-lebbie",
+      location: "Kailahun District",
+      age: 28,
+      story: "Sahr lost both parents during the civil war and grew up in poverty. HUWASAL's youth skills development program gave him training in sustainable agriculture. He now manages a cooperative farm that feeds over 200 families in his chiefdom and trains other young farmers in climate-smart techniques.",
+      description: "A young farmer leading a community cooperative after war-related displacement.",
+      published: true,
+    },
+    {
+      name: "Fatmata Kamara",
+      slug: "fatmata-kamara",
+      location: "Freetown",
+      age: 45,
+      story: "Fatmata is a disability rights advocate who lives with a physical disability. HUWASAL supported her to establish a community-based organization that provides mobility aids and advocacy training for persons with disabilities. She has successfully lobbied the local council to make public buildings more accessible.",
+      description: "A disability rights advocate who campaigns for accessible public spaces.",
+      published: true,
+    },
+    {
+      name: "Mohamed Kallon",
+      slug: "mohamed-kallon",
+      location: "Bombali District",
+      age: 19,
+      story: "Mohamed was at risk of joining armed groups after dropping out of school. Through HUWASAL's child protection and education initiative, he was reintegrated into school and now dreams of becoming a teacher. He mentors other at-risk youth in his community and has become a peer educator on children's rights.",
+      description: "A former at-risk youth now mentoring peers and pursuing an education.",
+      published: true,
+    },
+    {
+      name: "Haja Bangura",
+      slug: "haja-bangura",
+      location: "Port Loko District",
+      age: 54,
+      story: "Haja lost her husband to Ebola and struggled to feed her six children. HUWASAL enrolled her in a community health program where she trained as a community health worker. She now provides basic health services to over 500 households and is a respected leader in her village's health committee.",
+      description: "A community health worker providing care to hundreds of families.",
+      published: true,
+    },
+  ];
+
+  for (const beneficiary of beneficiaries) {
+    await prisma.beneficiary.create({ data: beneficiary });
+  }
+
+  console.log(`Seeded ${beneficiaries.length} beneficiaries.`);
+}
+
 main()
   .then(() => seedPrograms())
   .then(() => seedBlogPosts())
   .then(() => seedEvents())
   .then(() => seedTeamMembers())
   .then(() => seedPartners())
+  .then(() => seedBeneficiaries())
   .catch((e) => {
     console.error(e);
     process.exit(1);
