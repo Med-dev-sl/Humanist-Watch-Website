@@ -57,7 +57,7 @@ export default function ContactSection() {
           </div>
         </SlideIn>
 
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-stretch">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-stretch">
           {/* Contact Form */}
           <SlideIn direction="left">
             <div className="min-w-0 flex-1">

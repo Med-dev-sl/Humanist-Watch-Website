@@ -63,7 +63,7 @@ export default function ContactPage() {
         <div className="pointer-events-none absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/[0.02] blur-3xl" />
 
         <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12">
-          <div className="flex flex-col gap-8 lg:flex-row lg:items-stretch">
+          <div className="flex flex-col gap-12 lg:flex-row lg:items-stretch">
             {/* Contact Form */}
             <SlideIn direction="left">
               <div className="min-w-0 flex-1">
