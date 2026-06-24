@@ -8,6 +8,7 @@ import PartnersSection from "@/app/components/partners-section";
 import VolunteerSection from "@/app/components/volunteer-section";
 import ContactSection from "@/app/components/contact-section";
 import BeneficiariesSection from "@/app/components/beneficiaries-section";
+import GallerySection from "@/app/components/gallery-section";
 import SlideIn from "@/app/components/slide-in";
 
 export default function Home() {
@@ -27,6 +28,7 @@ export default function Home() {
       <VolunteerSection />
       <ContactSection />
       <BeneficiariesSection />
+      <GallerySection />
     </>
   );
 }

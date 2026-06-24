@@ -591,6 +591,68 @@ async function seedBeneficiaries() {
   console.log(`Seeded ${beneficiaries.length} beneficiaries.`);
 }
 
+async function seedGallery() {
+  const existingCount = await prisma.gallery.count();
+  if (existingCount > 0) {
+    console.log("Gallery already exist. Re-seeding with latest content...");
+    await prisma.gallery.deleteMany({});
+  }
+
+  const imagePlaceholders = [
+    { url: "https://placehold.co/800x600/1e3a5f/ffffff?text=Community+Outreach", alt: "Community outreach in Kenema", caption: "Team meeting with community leaders in Kenema" },
+    { url: "https://placehold.co/800x600/2c5282/ffffff?text=Women+Empowerment", alt: "Women empowerment workshop", caption: "Women empowerment workshop in Kailahun" },
+    { url: "https://placehold.co/800x600/1e3a5f/ffffff?text=Vocational+Training", alt: "Vocational training class", caption: "Tailoring and fashion design training session" },
+    { url: "https://placehold.co/800x600/2c5282/ffffff?text=School+Supplies", alt: "School supplies distribution", caption: "Distributing school supplies to children in Port Loko" },
+    { url: "https://placehold.co/800x600/1e3a5f/ffffff?text=Health+Screening", alt: "Community health screening", caption: "Free health screening for community members" },
+    { url: "https://placehold.co/800x600/2c5282/ffffff?text=Sanitation+Project", alt: "Sanitation project", caption: "Community-led sanitation project in Bombali" },
+  ];
+
+  const galleries = [
+    {
+      title: "Community Outreach",
+      slug: "community-outreach",
+      description: "HUWASAL team engaging with communities across Sierra Leone to promote human rights and social justice.",
+      published: true,
+      images: {
+        create: [
+          { ...imagePlaceholders[0], order: 0 },
+          { ...imagePlaceholders[1], order: 1 },
+        ],
+      },
+    },
+    {
+      title: "Education & Training",
+      slug: "education-training",
+      description: "Vocational training and educational support programs for youth and women in rural communities.",
+      published: true,
+      images: {
+        create: [
+          { ...imagePlaceholders[2], order: 0 },
+          { ...imagePlaceholders[3], order: 1 },
+        ],
+      },
+    },
+    {
+      title: "Health & Sanitation",
+      slug: "health-sanitation",
+      description: "Community health initiatives and sanitation projects improving lives in underserved areas.",
+      published: true,
+      images: {
+        create: [
+          { ...imagePlaceholders[4], order: 0 },
+          { ...imagePlaceholders[5], order: 1 },
+        ],
+      },
+    },
+  ];
+
+  for (const gallery of galleries) {
+    await prisma.gallery.create({ data: gallery });
+  }
+
+  console.log(`Seeded ${galleries.length} galleries with images.`);
+}
+
 main()
   .then(() => seedPrograms())
   .then(() => seedBlogPosts())
@@ -598,6 +660,7 @@ main()
   .then(() => seedTeamMembers())
   .then(() => seedPartners())
   .then(() => seedBeneficiaries())
+  .then(() => seedGallery())
   .catch((e) => {
     console.error(e);
     process.exit(1);
