@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import Icon from "@/app/components/mui-icon";
 
 const sidebarLinks = [
@@ -17,13 +18,24 @@ const sidebarLinks = [
   { href: "/admin/team", label: "Team Members", icon: "badge" },
   { href: "/admin/jobs", label: "Jobs", icon: "work" },
   { href: "/admin/contacts", label: "Contact Messages", icon: "mail" },
-  { href: "/admin/volunteers", label: "Volunteers", icon: "handshake" },
+  { href: "/admin/volunteers", label: "Volunteers", icon: "handshake", badge: "pending" },
   { href: "/admin/settings", label: "Site Settings", icon: "settings" },
   { href: "/admin/donations", label: "Donations", icon: "payments" },
 ];
 
 export default function AdminSidebar({ userName }: { userName: string }) {
   const pathname = usePathname();
+  const [pendingCount, setPendingCount] = useState(0);
+
+  useEffect(() => {
+    fetch("/api/admin/volunteers?status=pending")
+      .then((r) => r.json())
+      .then((data) => {
+        const arr = Array.isArray(data) ? data : data.volunteers ?? [];
+        setPendingCount(arr.length);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <aside className="animate-slide-right flex w-64 flex-col border-r bg-white shadow-sm">
@@ -62,6 +74,11 @@ export default function AdminSidebar({ userName }: { userName: string }) {
               )}
               <Icon name={link.icon} className="relative z-10 text-xl" />
               <span className="relative z-10">{link.label}</span>
+              {link.badge === "pending" && pendingCount > 0 && (
+                <span className="relative z-10 ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white animate-pulse">
+                  {pendingCount > 99 ? "99+" : pendingCount}
+                </span>
+              )}
               {isActive && (
                 <span className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-white/60" />
               )}
