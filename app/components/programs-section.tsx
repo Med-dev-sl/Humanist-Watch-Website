@@ -87,7 +87,8 @@ export default function ProgramsSection() {
 
         <div className="flex flex-col items-center gap-5 sm:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-4">
           {programs.map((program, i) => (
-            <TiltCard key={program.id} className="w-full sm:w-auto">
+            <div className="w-full max-w-sm sm:w-auto mx-auto" key={program.id}>
+            <TiltCard>
               <Link
                 href={`/programs/${program.slug}`}
                 className="group block w-full border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
@@ -130,6 +131,7 @@ export default function ProgramsSection() {
                 </div>
               </Link>
             </TiltCard>
+            </div>
           ))}
         </div>
 
