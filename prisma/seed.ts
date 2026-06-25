@@ -789,6 +789,36 @@ async function seedDonations() {
   console.log(`Seeded ${donations.length} donations.`);
 }
 
+async function seedAuditLogs() {
+  const existingCount = await prisma.auditLog.count();
+  if (existingCount > 0) {
+    console.log("Audit logs already exist. Skipping.");
+    return;
+  }
+
+  const admin = await prisma.user.findUnique({ where: { email: "superadmin@huwasal.com" } });
+
+  const logs = [
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "system", details: "System initialized and seeded with default data" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "user", details: "Created superadmin user" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "program", details: "Seeded 5 programs" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "blog", details: "Seeded 6 blog posts" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "event", details: "Seeded 6 events" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "team", details: "Seeded 8 team members" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "partner", details: "Seeded 10 partners" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "beneficiary", details: "Seeded 5 beneficiaries" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "gallery", details: "Seeded 3 galleries with images" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "job", details: "Seeded 4 job listings" },
+    { userId: admin?.id, userEmail: admin?.email, action: "create", entity: "donation", details: "Seeded 5 sample donations" },
+  ];
+
+  for (const log of logs) {
+    await prisma.auditLog.create({ data: log });
+  }
+
+  console.log(`Seeded ${logs.length} audit logs.`);
+}
+
 main()
   .then(() => seedPrograms())
   .then(() => seedBlogPosts())
@@ -799,6 +829,7 @@ main()
   .then(() => seedGallery())
   .then(() => seedJobs())
   .then(() => seedDonations())
+  .then(() => seedAuditLogs())
   .catch((e) => {
     console.error(e);
     process.exit(1);

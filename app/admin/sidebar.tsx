@@ -5,25 +5,52 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import Icon from "@/app/components/mui-icon";
+import { MODULES, type ModuleName, type Permissions } from "@/lib/permissions";
 
-const sidebarLinks = [
-  { href: "/admin", label: "Dashboard", icon: "dashboard" },
-  { href: "/admin/users", label: "Users", icon: "group" },
-  { href: "/admin/programs", label: "Programs & Projects", icon: "assignment" },
-  { href: "/admin/blog", label: "Blog Posts", icon: "article" },
-  { href: "/admin/gallery", label: "Gallery", icon: "photo_library" },
-  { href: "/admin/beneficiaries", label: "Beneficiaries", icon: "volunteer_activism" },
-  { href: "/admin/events", label: "Events", icon: "event" },
-  { href: "/admin/partners", label: "Partners", icon: "handshake" },
-  { href: "/admin/team", label: "Team Members", icon: "badge" },
-  { href: "/admin/jobs", label: "Jobs", icon: "work" },
-  { href: "/admin/contacts", label: "Contact Messages", icon: "mail", badge: "unread" },
-  { href: "/admin/volunteers", label: "Volunteers", icon: "handshake", badge: "pending" },
-  { href: "/admin/settings", label: "Site Settings", icon: "settings" },
-  { href: "/admin/donations", label: "Donations", icon: "payments", badge: "unreadDonation" },
+type SidebarLink = {
+  href: string;
+  label: string;
+  icon: string;
+  badge?: "pending" | "unread" | "unreadDonation";
+  module: ModuleName | null;
+};
+
+const allLinks: SidebarLink[] = [
+  { href: "/admin", label: "Dashboard", icon: "dashboard", module: "dashboard" },
+  { href: "/admin/users", label: "Users", icon: "group", module: "users" },
+  { href: "/admin/programs", label: "Programs & Projects", icon: "assignment", module: "programs" },
+  { href: "/admin/blog", label: "Blog Posts", icon: "article", module: "blog" },
+  { href: "/admin/gallery", label: "Gallery", icon: "photo_library", module: "gallery" },
+  { href: "/admin/beneficiaries", label: "Beneficiaries", icon: "volunteer_activism", module: "beneficiaries" },
+  { href: "/admin/events", label: "Events", icon: "event", module: "events" },
+  { href: "/admin/partners", label: "Partners", icon: "handshake", module: "partners" },
+  { href: "/admin/team", label: "Team Members", icon: "badge", module: "team" },
+  { href: "/admin/jobs", label: "Jobs", icon: "work", module: "jobs" },
+  { href: "/admin/contacts", label: "Contact Messages", icon: "mail", badge: "unread", module: "contacts" },
+  { href: "/admin/volunteers", label: "Volunteers", icon: "handshake", badge: "pending", module: "volunteers" },
+  { href: "/admin/donations", label: "Donations", icon: "payments", badge: "unreadDonation", module: "donations" },
+  { href: "/admin/settings", label: "Site Settings", icon: "settings", module: "settings" },
+  { href: "/admin/audit-logs", label: "Audit Logs", icon: "history", module: "audit-logs" },
 ];
 
-export default function AdminSidebar({ userName }: { userName: string }) {
+function filterLinks(links: SidebarLink[], role: string, permissions: Permissions | null): SidebarLink[] {
+  if (role === "SUPERADMIN") return links;
+  return links.filter((link) => {
+    if (!link.module) return true;
+    const level = permissions?.[link.module];
+    return level && level !== "none";
+  });
+}
+
+export default function AdminSidebar({
+  userName,
+  userRole,
+  userPermissions,
+}: {
+  userName: string;
+  userRole: string;
+  userPermissions: Permissions | null;
+}) {
   const pathname = usePathname();
   const [pendingCount, setPendingCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -59,6 +86,8 @@ export default function AdminSidebar({ userName }: { userName: string }) {
       .catch(() => {});
   }, []);
 
+  const sidebarLinks = filterLinks(allLinks, userRole, userPermissions);
+
   return (
     <aside className="animate-slide-right flex w-64 flex-col border-r bg-white shadow-sm">
       <div className="flex h-16 items-center gap-3 border-b bg-gradient-to-r from-primary to-primary-dark px-4">
@@ -75,6 +104,9 @@ export default function AdminSidebar({ userName }: { userName: string }) {
       <div className="border-b bg-gradient-to-r from-primary/[0.03] to-transparent px-4 py-3">
         <p className="text-xs text-zinc-400">Signed in as</p>
         <p className="font-alt text-sm font-bold text-primary">{userName}</p>
+        <span className="mt-0.5 inline-block rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary">
+          {userRole}
+        </span>
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">

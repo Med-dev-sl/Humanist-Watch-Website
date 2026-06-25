@@ -5,6 +5,7 @@ import { useToast } from "@/app/admin/toast";
 import PageHeader from "@/app/admin/page-header";
 import Modal from "@/app/components/modal";
 import LoadingSpinner from "@/app/components/loading-spinner";
+import { MODULES, moduleLabel } from "@/lib/permissions";
 
 type User = {
   id: string;
@@ -13,6 +14,7 @@ type User = {
   role: "SUPERADMIN" | "WEBSITE_ADMINISTRATOR" | "ADMIN";
   image: string | null;
   bio: string | null;
+  permissions: Record<string, string> | null;
   createdAt: string;
 };
 
@@ -22,6 +24,7 @@ type FormData = {
   role: "SUPERADMIN" | "WEBSITE_ADMINISTRATOR" | "ADMIN";
   password: string;
   bio: string;
+  permissions: Record<string, string>;
 };
 
 const emptyForm: FormData = {
@@ -30,6 +33,7 @@ const emptyForm: FormData = {
   role: "ADMIN",
   password: "",
   bio: "",
+  permissions: Object.fromEntries(MODULES.map((m) => [m, "crud"])),
 };
 
 const roleColors: Record<string, string> = {
@@ -89,6 +93,7 @@ export default function AdminUsers() {
         role: editing.role,
         password: "",
         bio: editing.bio ?? "",
+        permissions: editing.permissions ?? Object.fromEntries(MODULES.map((m) => [m, "crud"])),
       });
       setFormErrors({});
     } else if (formOpen && !editing) {
@@ -125,7 +130,7 @@ export default function AdminUsers() {
     if (!validate()) return;
     setSaving(true);
     try {
-      const payload: Record<string, unknown> = { name: form.name, email: form.email, role: form.role, bio: form.bio };
+      const payload: Record<string, unknown> = { name: form.name, email: form.email, role: form.role, bio: form.bio, permissions: form.permissions };
       if (!editing) payload.password = form.password;
 
       const url = editing ? `/api/admin/users/${editing.id}` : "/api/admin/users";
@@ -408,6 +413,57 @@ export default function AdminUsers() {
                     className="w-full resize-none rounded-xl border border-zinc-200 bg-white px-4 py-2.5 text-sm text-primary outline-none transition-all duration-300 placeholder-zinc-300 focus:border-primary/40 focus:shadow-lg focus:shadow-primary/5"
                   />
                 </div>
+
+                {(editing ? editing.role : form.role) !== "SUPERADMIN" && (
+                  <div className="col-span-2">
+                    <div className="flex items-center justify-between border-b pb-2">
+                      <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Module Permissions</label>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setForm({ ...form, permissions: Object.fromEntries(MODULES.map((m) => [m, "read"])) })}
+                          className="rounded-lg bg-zinc-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-zinc-500 transition-colors hover:bg-zinc-200"
+                        >
+                          All Read
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setForm({ ...form, permissions: Object.fromEntries(MODULES.map((m) => [m, "crud"])) })}
+                          className="rounded-lg bg-primary/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary transition-colors hover:bg-primary/20"
+                        >
+                          All CRUD
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {MODULES.map((module) => (
+                        <div key={module} className="flex items-center justify-between rounded-lg border border-zinc-100 bg-white px-3 py-2">
+                          <span className="text-sm text-zinc-700">{moduleLabel(module)}</span>
+                          <div className="flex items-center gap-1.5">
+                            {(["none", "read", "crud"] as const).map((level) => (
+                              <button
+                                key={level}
+                                type="button"
+                                onClick={() => setForm({ ...form, permissions: { ...form.permissions, [module]: level } })}
+                                className={`rounded-lg px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-all ${
+                                  form.permissions[module] === level
+                                    ? level === "none"
+                                      ? "bg-zinc-200 text-zinc-600"
+                                      : level === "read"
+                                        ? "bg-blue-100 text-blue-700"
+                                        : "bg-green-100 text-green-700"
+                                    : "bg-zinc-50 text-zinc-400 hover:bg-zinc-100"
+                                }`}
+                              >
+                                {level === "none" ? "Off" : level}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

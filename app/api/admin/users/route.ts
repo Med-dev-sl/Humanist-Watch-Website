@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
-import { verifyToken, hashPassword } from "@/lib/auth";
+import { verifyToken } from "@/lib/auth";
+import { createAuditLog } from "@/lib/audit";
 
 async function auth() {
   const token = (await cookies()).get("token")?.value;
@@ -23,24 +24,15 @@ export async function GET(req: NextRequest) {
   const where: Record<string, unknown> = {};
   if (q) {
     where.OR = [
-      { name: { contains: q, mode: "insensitive" as const } },
-      { email: { contains: q, mode: "insensitive" as const } },
+      { name: { contains: q, mode: "insensitive" } },
+      { email: { contains: q, mode: "insensitive" } },
     ];
   }
 
   const users = await prisma.user.findMany({
     where,
     orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      image: true,
-      bio: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: { id: true, name: true, email: true, role: true, image: true, bio: true, permissions: true, createdAt: true },
   });
 
   return NextResponse.json(users);
@@ -51,7 +43,7 @@ export async function POST(req: NextRequest) {
   if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { name, email, password, role } = body;
+  const { name, email, password, role, permissions } = body;
 
   if (!name || !email || !password) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -62,21 +54,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Email already in use" }, { status: 409 });
   }
 
-  const hashed = await hashPassword(password);
+  const bcrypt = await import("bcryptjs");
+  const hashed = await bcrypt.hash(password, 12);
 
   const user = await prisma.user.create({
-    data: { name, email, password: hashed, role },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      image: true,
-      bio: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    data: { name, email, password: hashed, role: role ?? "ADMIN", permissions: permissions ?? undefined },
+    select: { id: true, name: true, email: true, role: true, image: true, bio: true, permissions: true, createdAt: true },
   });
+
+  await createAuditLog({ userId: payload.id, userEmail: payload.email, action: "create", entity: "user", entityId: user.id, details: `Created user ${name}` });
 
   return NextResponse.json(user, { status: 201 });
 }
