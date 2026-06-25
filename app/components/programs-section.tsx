@@ -85,9 +85,9 @@ export default function ProgramsSection() {
           </div>
         </SlideIn>
 
-        <div className="flex flex-col items-stretch gap-5 sm:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-col items-center gap-5 sm:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-4">
           {programs.map((program, i) => (
-            <TiltCard key={program.id}>
+            <TiltCard key={program.id} className="w-full sm:w-auto">
               <Link
                 href={`/programs/${program.slug}`}
                 className="group block w-full border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"

@@ -96,9 +96,9 @@ export default function ProgramsPage() {
                 <p className="text-zinc-400">No programs published yet.</p>
               </div>
             ) : (
-              <div className="flex flex-col items-stretch gap-6 sm:gap-8 md:grid md:grid-cols-2 lg:grid-cols-3">
+              <div className="flex flex-col items-center gap-6 sm:gap-8 md:grid md:grid-cols-2 lg:grid-cols-3">
                 {programs.map((program, i) => (
-                  <TiltCard key={program.id}>
+                  <TiltCard key={program.id} className="w-full md:w-auto">
                     <Link
                       href={`/programs/${program.slug}`}
                       className="group block w-full border border-primary/10 bg-white shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
